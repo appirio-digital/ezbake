@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
 const initialQuestions = require('./initialQuestions');
-const templateQuestions = require('./templateQuestions');
 const cwd = path.resolve(process.cwd());
 
 // Escape hatches below for exception files
@@ -81,17 +80,6 @@ function deleteTemplateJson(projectName) {
   fs.unlinkSync(pathToTemplateJson); // Bye felicia
 }
 
-function askTemplateQuestions(validTemplateFields) {
-  return Object.keys(templateQuestions)
-    .filter(questionKey => {
-      return validTemplateFields[questionKey] === true;
-    })
-    .reduce((validQuestions, questionKey) => {
-      validQuestions.push(templateQuestions[questionKey]);
-      return validQuestions;
-    }, []);
-}
-
 function templateReplace(answers) {
   const pathToProject = path.join(cwd, `./${answers.projectName}`);
   let files = walkSync(pathToProject);
@@ -144,7 +132,7 @@ async function run() {
     await deleteGitFolder(answers.projectName);
     let templateJson = readTemplateJson(answers.projectName);
     let templateAnswers = await inquirer.prompt(
-      askTemplateQuestions(templateJson.fields)
+      templateJson.questions
     );
     templateReplace(
       Object.assign(
