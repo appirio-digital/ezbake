@@ -1,9 +1,29 @@
 #!/usr/bin/env node
 const { spawn } = require('child_process');
+const fs = require('fs');
 const path = require('path');
 const inquirer = require('inquirer');
 const initialQuestions = require('./initialQuestions');
 const templateQuestions = require('./templateQuestions');
+const cwd = path.resolve(process.cwd());
+const validFiles = {'.js': true, '.json': true, '.yml': true};
+const ignoreFiles = {'launch.json': true};
+const _ = require('lodash');
+_.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
+
+function walkSync (dir, filelist) {
+  let files = fs.readdirSync(dir);
+  filelist = filelist || [];
+  files.forEach((file) => {
+    if (fs.statSync(path.join(dir, file)).isDirectory()) {
+      filelist = walkSync(path.join(dir, file), filelist);
+    }
+    else {
+      filelist.push({path: path.join(dir, file), name: file});
+    }
+  });
+  return filelist;
+};
 
 function cloneRepo(url, projectName) {
   return new Promise(
@@ -30,7 +50,6 @@ function cloneRepo(url, projectName) {
 function deleteGitFolder(projectName) {
   return new Promise(
     resolve => {
-      const cwd = path.resolve(process.cwd());
       const pathToGit = path.join(cwd, `./${projectName}/.git`);
       console.log(`Removing .git folder from ${pathToGit}`);
       const del = spawn('rm', ['-rf', pathToGit]);
@@ -46,20 +65,48 @@ function deleteGitFolder(projectName) {
   );
 }
 
+function readTemplateJson(projectName) {
+  const pathToTemplateJson = path.join(cwd, `./${projectName}/template.json`);
+  console.log(`Reading ${pathToTemplateJson}...`);
+  return require(pathToTemplateJson).fields;
+}
+
+function askTemplateQuestions(validTemplateFields) {
+  return Object.keys(templateQuestions)
+    .filter(questionKey => {
+      return validTemplateFields[questionKey] === true;
+    })
+    .reduce((validQuestions, questionKey) => {
+      validQuestions.push(templateQuestions[questionKey]);
+      return validQuestions;
+    }, []);
+}
+
+function templateReplace(answers) {
+  const pathToProject = path.join(cwd, `./${answers.projectName}`);
+  let files = walkSync(pathToProject);
+  files.forEach(file => {
+    let extension = path.extname(file.name);
+    if (validFiles[extension] && !ignoreFiles[file.name]) {
+      console.log(`Swapping template values for ${file.path}...`);
+      let fileTemplate = _.template(fs.readFileSync(file.path));
+      fs.writeFileSync(file.path, fileTemplate(answers), { encoding: 'utf8' });
+    }
+  });
+}
+
 async function run() {
   try {
     let answers = await inquirer.prompt(initialQuestions);
     await cloneRepo(answers.gitRepoURL, answers.projectName);
-
-    // TODO: Delete .git folder in cloned directory
     await deleteGitFolder(answers.projectName);
-
-    // TODO: Read the template.json in the cloned directory
-    // TODO: Template swap files in cloned directory
+    let templateAnswers = await inquirer.prompt(
+      askTemplateQuestions(readTemplateJson(answers.projectName))
+    );
+    templateReplace(Object.assign({...answers, ...templateAnswers}, {projectNameDocker: answers.projectName.replace(/-/g, '_')}));
   } catch (error) {
     console.error(error);
   }
 }
-
 
 run();

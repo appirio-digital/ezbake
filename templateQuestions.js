@@ -7,13 +7,13 @@ module.exports = {
   },
   'localPortRedis': {
     type: 'input',
-    name: 'localPortPostgres',
+    name: 'localPortRedis',
     message: `Please specify the local port on which to expose the Redis instance from Docker`,
     default: '60001'
   },
   'localPortWebApp': {
     type: 'input',
-    name: 'localPortPostgres',
+    name: 'localPortWebApp',
     message: `Please specify the local port on which to expose the Web App from Docker`,
     default: '60002'
   },

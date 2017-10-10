@@ -5,7 +5,7 @@ module.exports = [
     message: `Please enter the name for this project`,
     default: 'ads-baseline-webapp',
     filter: (val) => {
-      return val.replace(' ', '-');
+      return val.replace(/ /g, '-');
     }
   },
   {
