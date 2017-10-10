@@ -10,5 +10,8 @@
   "dependencies": {
     "inquirer": "^3.3.0",
     "lodash": "^4.17.4"
+  },
+  "bin": {
+    "ads-baseline": "./index.js"
   }
 }
