@@ -6,6 +6,7 @@ const inquirer = require('inquirer');
 const initialQuestions = require('./initialQuestions');
 const cwd = path.resolve(process.cwd());
 const _ = require('lodash');
+const minimatch = require('minimatch');
 
 // Only watch for <%= %> swaps, lodash template swaps ES6 templates by default
 _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
@@ -70,17 +71,29 @@ function deleteTemplateJson(projectName) {
   fs.unlinkSync(pathToTemplateJson); // Bye felicia
 }
 
+function isValidFile(file, validFiles) {
+  return Object.keys(validFiles)
+    .some(filePattern => {
+      return minimatch(file, filePattern);
+    });
+}
+
+function isIgnoredFile(file, ignoredFiles) {
+  return Object.keys(ignoredFiles)
+    .some(filePattern => {
+      return minimatch(file, filePattern);
+    });
+}
+
 function templateReplace(answers, templateJson) {
   const pathToProject = path.join(cwd, `./${answers.projectName}`);
-  let validExtensions = templateJson.valid_extensions || {};
   let validFiles = templateJson.valid_files || {};
   let ignoreFiles = templateJson.ignore_files || {};
   let files = walkSync(pathToProject);
   files.forEach(file => {
     let extension = path.extname(file.name);
     if (
-      (validExtensions[extension] || validFiles[file.name]) &&
-      !ignoreFiles[file.name]
+      (isValidFile(file.name, validFiles)) && !isIgnoredFile(file.name, ignoreFiles)
     ) {
       console.log(`Swapping template values for ${file.path}...`);
       let fileTemplate = _.template(fs.readFileSync(file.path));
