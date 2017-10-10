@@ -1,6 +1,6 @@
 {
   "name": "ads-baseline",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A command line utility to quickly scaffold ads-baseline template brances for a client project",
   "main": "index.js",
   "repository": "https://github.com/appirio-digital/ads-baseline.git",
