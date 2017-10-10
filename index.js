@@ -76,6 +76,11 @@ function readTemplateJson(projectName) {
   return require(pathToTemplateJson);
 }
 
+function deleteTemplateJson(projectName) {
+  const pathToTemplateJson = path.join(cwd, `./${projectName}/template.json`);
+  fs.unlinkSync(pathToTemplateJson); // Bye felicia
+}
+
 function askTemplateQuestions(validTemplateFields) {
   return Object.keys(templateQuestions)
     .filter(questionKey => {
@@ -152,6 +157,8 @@ async function run() {
       let envAnswers = await inquirer.prompt(askEnvQuestions(templateJson['.env']));
       createEnvFile(answers.projectName, envAnswers);
     }
+
+    deleteTemplateJson(answers.projectName);
   } catch (error) {
     console.error(error);
   }
