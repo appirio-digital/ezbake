@@ -26,4 +26,4 @@ The Appirio Digital Studios command line utility for authoring, scaffolding, and
 
 ## Conventions
 
-See [./CONVENTIONS.MD](CONVENTIONS.MD)
+See [CONVENTIONS.MD](./CONVENTIONS.MD)
