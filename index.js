@@ -5,16 +5,6 @@ const path = require('path');
 const inquirer = require('inquirer');
 const initialQuestions = require('./initialQuestions');
 const cwd = path.resolve(process.cwd());
-
-// Escape hatches below for exception files
-const validFiles = { Dockerfile: true };
-const validExtensions = {
-  '.js': true,
-  '.json': true,
-  '.yml': true,
-  '.sh': true
-};
-const ignoreFiles = {};
 const _ = require('lodash');
 
 // Only watch for <%= %> swaps, lodash template swaps ES6 templates by default
@@ -80,8 +70,11 @@ function deleteTemplateJson(projectName) {
   fs.unlinkSync(pathToTemplateJson); // Bye felicia
 }
 
-function templateReplace(answers) {
+function templateReplace(answers, templateJson) {
   const pathToProject = path.join(cwd, `./${answers.projectName}`);
+  let validExtensions = templateJson.valid_extensions || {};
+  let validFiles = templateJson.valid_files || {};
+  let ignoreFiles = templateJson.ignore_files || {};
   let files = walkSync(pathToProject);
   files.forEach(file => {
     let extension = path.extname(file.name);
@@ -122,7 +115,7 @@ async function run() {
       Object.assign(
         { ...answers, ...templateAnswers },
         { projectNameDocker: answers.projectName.replace(/-/g, '_') }
-      )
+      ), templateJson
     );
 
     if (templateJson['.env']) {
