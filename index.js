@@ -96,22 +96,6 @@ function templateReplace(answers) {
   });
 }
 
-function askEnvQuestions(validEnvFields) {
-  return Object.keys(validEnvFields)
-  .filter(envField => {
-    return validEnvFields[envField] === true;
-  })
-  .reduce((envQuestions, envField) => {
-    envQuestions.push({
-      type: 'input',
-      name: envField,
-      message: `Please specify a value for the .env field ${envField}`,
-      default: `shhh_its_a_secret`
-    });
-    return envQuestions;
-  }, []);
-}
-
 function createEnvFile(projectName, answers) {
   const pathToEnvFile = path.join(cwd, `./${projectName}/.env`);
   let contents = Object.keys(answers)
@@ -142,7 +126,7 @@ async function run() {
     );
 
     if (templateJson['.env']) {
-      let envAnswers = await inquirer.prompt(askEnvQuestions(templateJson['.env']));
+      let envAnswers = await inquirer.prompt(templateJson['.env']);
       createEnvFile(answers.projectName, envAnswers);
     }
 
