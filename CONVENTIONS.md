@@ -62,9 +62,14 @@ Below is a sample file
       "default": "60005"
     }
   ],
-  ".env": {
-    "JWT_SECRET": true
-  }
+  ".env": [
+    {
+      "type": "input",
+      "name": "JWT_SECRET",
+      "message": "Please specify a value for the JWT_SECRET environment variable. This is how we will sign JSON Web Tokens.",
+      "default": "shhh_its_a_secret"
+    }
+  ]
 }
 ```
 
@@ -72,5 +77,9 @@ The keys of the `questions` is where you would define the inputs from a user via
 
 You can then embed in your files the names of the question prompts.  For example, above, `localPortWebApp` would correspond to a templatized value of `<%= localPortWebApp %>` on some file in your project.
 
-The keys of the `.env` property tells `ads-baseline` to prompt the user for a value to use for that environment variable in the `.env` file it will create.
+The keys of the `.env` is similar to `questions`. They are also [inquirer](https://www.npmjs.com/package/inquirer) prompts that then map to a corresponding .env value.  For example, the above file would generate a `.env` file in the root of the generated project that looks like the following:
+
+```
+JWT_SECRET=shhh_its_a_secret
+```
 
