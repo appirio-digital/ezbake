@@ -6,7 +6,7 @@ const inquirer = require('inquirer');
 const initialQuestions = require('./initialQuestions');
 const templateQuestions = require('./templateQuestions');
 const cwd = path.resolve(process.cwd());
-const validFiles = {'.js': true, '.json': true, '.yml': true};
+const validFiles = {'.js': true, '.json': true, '.yml': true, '.sh': true};
 const ignoreFiles = {'launch.json': true};
 const _ = require('lodash');
 _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
