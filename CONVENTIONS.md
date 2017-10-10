@@ -18,27 +18,59 @@
 
 ## template.json
 
-A `template.json` is a file that defines what standard template questions to ask (via the `fields` property) as well as what `.env` lines to create for `dotenv` support.
+A `template.json` is a file that defines what standard template questions to ask (via the `questions` property) as well as what `.env` lines to create for `dotenv` support.
 
 Below is a sample file
 
 ```json
 {
-  "fields": {
-    "localPortPostgres": true,
-    "localPortRedis": true,
-    "localPortWebApp": true,
-    "localPortNodeDebugger": true,
-    "localPortReactDevServer": true,
-    "localPortSwaggerEditor": true
-  },
+  "questions": [
+    {
+      "type": "input",
+      "name": "localPortPostgres",
+      "message": "Please specify the local port on which to expose the Postgres instance from Docker",
+      "default": "60000"
+    },
+    {
+      "type": "input",
+      "name": "localPortRedis",
+      "message": "Please specify the local port on which to expose the Redis instance from Docker",
+      "default": "60001"
+    },
+    {
+      "type": "input",
+      "name": "localPortWebApp",
+      "message": "Please specify the local port on which to expose the WebApp from Docker",
+      "default": "60002"
+    },
+    {
+      "type": "input",
+      "name": "localPortNodeDebugger",
+      "message": "Please specify the local port on which to expose the Node Debugger from Docker",
+      "default": "60003"
+    },
+    {
+      "type": "input",
+      "name": "localPortReactDevServer",
+      "message": "Please specify the local port on which to expose the React Dev Server from Docker",
+      "default": "60004"
+    },
+    {
+      "type": "input",
+      "name": "localPortSwaggerEditor",
+      "message": "Please specify the local port on which to expose the Swagger Editor from Docker",
+      "default": "60005"
+    }
+  ],
   ".env": {
     "JWT_SECRET": true
   }
 }
 ```
 
-The keys of the `fields` property correspond to a question in the `templateQuestions.js` file.
+The keys of the `questions` is where you would define the inputs from a user via [inquirer](https://www.npmjs.com/package/inquirer).  See the examples on the Inquirer documentation to see how to structure specific questions.
+
+You can then embed in your files the names of the question prompts.  For example, above, `localPortWebApp` would correspond to a templatized value of `<%= localPortWebApp %>` on some file in your project.
 
 The keys of the `.env` property tells `ads-baseline` to prompt the user for a value to use for that environment variable in the `.env` file it will create.
 
