@@ -14,16 +14,25 @@
 
 1. It is accessible from your machine, either via https or ssh links
 1. It has a `template` branch that `ads-baseline` will use a source
-1. It has a `template.json` at the root
+1. It has a valid `template.json` at the root
 
 ## template.json
 
-A `template.json` is a file that defines what standard template questions to ask (via the `questions` property) as well as what `.env` lines to create for `dotenv` support.
+A `template.json` is what drives the `ads-baseline` process. It defines several things for the utility.
 
-Below is a sample file
+### Sample 
 
 ```json
 {
+  "valid_files": { 
+    "*.js": true,
+    "*.json": true,
+    "*.java": true,
+    "*.yml": true,
+    "*.sh": true,
+    "Dockerfile": true
+  },
+  "ignore_files": {},
   "questions": [
     {
       "type": "input",
@@ -51,12 +60,6 @@ Below is a sample file
     },
     {
       "type": "input",
-      "name": "localPortReactDevServer",
-      "message": "Please specify the local port on which to expose the React Dev Server from Docker",
-      "default": "60004"
-    },
-    {
-      "type": "input",
       "name": "localPortSwaggerEditor",
       "message": "Please specify the local port on which to expose the Swagger Editor from Docker",
       "default": "60005"
@@ -73,9 +76,23 @@ Below is a sample file
 }
 ```
 
+### Usage
+
+#### valid_files
+
+The keys of the `valid_files` property are [globs](https://www.npmjs.com/package/minimatch) that we use to match files in the directory. Only files that match the glob patterns specified in this property are template replaced.
+
+#### ignore_files
+
+The keys of the `valid_files` property are [globs](https://www.npmjs.com/package/minimatch) that we use to match files in the directory. Should a file match any of the globs defined here, they will **not** be template replaced.
+
+#### questions
+
 The keys of the `questions` is where you would define the inputs from a user via [inquirer](https://www.npmjs.com/package/inquirer).  See the examples on the Inquirer documentation to see how to structure specific questions.
 
 You can then embed in your files the names of the question prompts.  For example, above, `localPortWebApp` would correspond to a templatized value of `<%= localPortWebApp %>` on some file in your project.
+
+#### .env
 
 The keys of the `.env` is similar to `questions`. They are also [inquirer](https://www.npmjs.com/package/inquirer) prompts that then map to a corresponding .env value.  For example, the above file would generate a `.env` file in the root of the generated project that looks like the following:
 
