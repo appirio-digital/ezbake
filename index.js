@@ -14,7 +14,7 @@ const validExtensions = {
   '.yml': true,
   '.sh': true
 };
-const ignoreFiles = { 'launch.json': true };
+const ignoreFiles = {};
 const _ = require('lodash');
 
 // Only watch for <%= %> swaps, lodash template swaps ES6 templates by default
