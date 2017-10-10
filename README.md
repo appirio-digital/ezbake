@@ -26,4 +26,4 @@ The Appirio Digital Studios command line utility for authoring, scaffolding, and
 
 ## Conventions
 
-See [CONVENTIONS.MD](./CONVENTIONS.MD)
+See [CONVENTIONS.MD](https://github.com/appirio-digital/ads-baseline/blob/master/CONVENTIONS.md)
