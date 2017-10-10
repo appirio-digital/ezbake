@@ -6,9 +6,14 @@ const inquirer = require('inquirer');
 const initialQuestions = require('./initialQuestions');
 const templateQuestions = require('./templateQuestions');
 const cwd = path.resolve(process.cwd());
-const validFiles = {'.js': true, '.json': true, '.yml': true, '.sh': true};
+
+// Escape hatches below for exception files
+const validFiles = {'Dockerfile': true};
+const validExtensions = {'.js': true, '.json': true, '.yml': true, '.sh': true};
 const ignoreFiles = {'launch.json': true};
 const _ = require('lodash');
+
+// Only watch for <%= %> swaps, lodash template swaps ES6 templates by default
 _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
 
 function walkSync (dir, filelist) {
@@ -68,7 +73,7 @@ function deleteGitFolder(projectName) {
 function readTemplateJson(projectName) {
   const pathToTemplateJson = path.join(cwd, `./${projectName}/template.json`);
   console.log(`Reading ${pathToTemplateJson}...`);
-  return require(pathToTemplateJson).fields;
+  return require(pathToTemplateJson);
 }
 
 function askTemplateQuestions(validTemplateFields) {
@@ -87,7 +92,7 @@ function templateReplace(answers) {
   let files = walkSync(pathToProject);
   files.forEach(file => {
     let extension = path.extname(file.name);
-    if (validFiles[extension] && !ignoreFiles[file.name]) {
+    if ((validExtensions[extension] || validFiles[file.name]) && !ignoreFiles[file.name]) {
       console.log(`Swapping template values for ${file.path}...`);
       let fileTemplate = _.template(fs.readFileSync(file.path));
       fs.writeFileSync(file.path, fileTemplate(answers), { encoding: 'utf8' });
@@ -101,9 +106,11 @@ async function run() {
     await cloneRepo(answers.gitRepoURL, answers.projectName);
     await deleteGitFolder(answers.projectName);
     let templateAnswers = await inquirer.prompt(
-      askTemplateQuestions(readTemplateJson(answers.projectName))
+      askTemplateQuestions(readTemplateJson(answers.projectName).fields)
     );
     templateReplace(Object.assign({...answers, ...templateAnswers}, {projectNameDocker: answers.projectName.replace(/-/g, '_')}));
+
+    // TODO: Read ".env" property from template.json, if it exists, to specify values for secrets
   } catch (error) {
     console.error(error);
   }
