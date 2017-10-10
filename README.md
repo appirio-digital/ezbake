@@ -24,3 +24,6 @@ The Appirio Digital Studios command line utility for authoring, scaffolding, and
 1. Answer the prompts
 1. Profit
 
+## Conventions
+
+See [./CONVENTIONS.MD](CONVENTIONS.MD)
