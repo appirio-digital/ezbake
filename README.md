@@ -16,7 +16,7 @@ The Appirio Digital Studios command line utility for authoring, scaffolding, and
 
 ## Installation
 
-`npm install -g git@github.com:appirio-digital/ads-baseline.git`
+`npm install -g https://github.com/appirio-digital/ads-baseline.git`
 
 ## Usage
 
