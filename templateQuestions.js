@@ -32,7 +32,7 @@ module.exports = {
   'localPortSwaggerEditor': {
     type: 'input',
     name: 'localPortSwaggerEditor',
-    message: `Please specify the local port on which to expose the React Dev server from Docker`,
-    default: '60004'
+    message: `Please specify the local port on which to expose the Swagger Editor from Docker`,
+    default: '60005'
   }
 }
