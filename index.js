@@ -103,13 +103,43 @@ function templateReplace(answers) {
   });
 }
 
+function askEnvQuestions(validEnvFields) {
+  return Object.keys(validEnvFields)
+  .filter(envField => {
+    return validEnvFields[envField] === true;
+  })
+  .reduce((envQuestions, envField) => {
+    envQuestions.push({
+      type: 'input',
+      name: envField,
+      message: `Please specify a value for the .env field ${envField}`,
+      default: `shhh_its_a_secret`
+    });
+    return envQuestions;
+  }, []);
+}
+
+function createEnvFile(projectName, answers) {
+  const pathToEnvFile = path.join(cwd, `./${projectName}/.env`);
+  let contents = Object.keys(answers)
+    .map(answerKey => {
+      return `${answerKey}=${answers[answerKey]}\n`
+    })
+    .reduce((previous, current) => {
+      return previous.concat(current);
+    }, '');
+    
+  fs.writeFileSync(pathToEnvFile, contents, { encoding: 'utf8' }); 
+}
+
 async function run() {
   try {
     let answers = await inquirer.prompt(initialQuestions);
     await cloneRepo(answers.gitRepoURL, answers.projectName);
     await deleteGitFolder(answers.projectName);
+    let templateJson = readTemplateJson(answers.projectName);
     let templateAnswers = await inquirer.prompt(
-      askTemplateQuestions(readTemplateJson(answers.projectName).fields)
+      askTemplateQuestions(templateJson.fields)
     );
     templateReplace(
       Object.assign(
@@ -118,7 +148,10 @@ async function run() {
       )
     );
 
-    // TODO: Read ".env" property from template.json, if it exists, to specify values for secrets
+    if (templateJson['.env']) {
+      let envAnswers = await inquirer.prompt(askEnvQuestions(templateJson['.env']));
+      createEnvFile(answers.projectName, envAnswers);
+    }
   } catch (error) {
     console.error(error);
   }
