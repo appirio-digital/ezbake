@@ -84,7 +84,7 @@ The keys of the `valid_files` property are [globs](https://www.npmjs.com/package
 
 #### ignore_files
 
-The keys of the `valid_files` property are [globs](https://www.npmjs.com/package/minimatch) that we use to match files in the directory. Should a file match any of the globs defined here, they will **not** be template replaced.
+The keys of the `ignore_files` property are [globs](https://www.npmjs.com/package/minimatch) that we use to match files in the directory. Should a file match any of the globs defined here, they will **not** be template replaced.
 
 #### questions
 
