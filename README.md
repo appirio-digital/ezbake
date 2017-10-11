@@ -8,6 +8,14 @@ The Appirio Digital Studios command line utility for authoring, scaffolding, and
 1. **Onboarding in 15 minutes or less**: A brand new developer should be up and running quickly
 1. **Opinionated, but open to extension**: Goes easy on crazy abstractions, but can be extended to scaffold most any type of project
 
+## Architecture
+
+This utility is driven by the core Node.js framework and three libraries:
+
+* [inquirer](https://www.npmjs.com/package/inquirer): Prettified console prompts
+* [lodash](https://www.npmjs.com/package/lodash): Swiss-army knife JavaScript library for templating
+* [minimatch](https://www.npmjs.com/package/minimatch): The official NPM library for glob matching
+
 ## Prerequisites
 
 1. [Node Version Manager](https://github.com/creationix/nvm)
@@ -22,6 +30,7 @@ The Appirio Digital Studios command line utility for authoring, scaffolding, and
 
 1. Execute `ads-baseline`
 1. Answer the prompts
+1. When prompted for a source Git repo, copy and paste a Git URL that [follows the conventions](https://github.com/appirio-digital/ads-baseline/blob/master/CONVENTIONS.md)
 1. Profit
 
 ## Conventions
