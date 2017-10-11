@@ -91,9 +91,8 @@ function templateReplace(answers, templateJson) {
   let ignoreFiles = templateJson.ignore_files || {};
   let files = walkSync(pathToProject);
   files.forEach(file => {
-    let extension = path.extname(file.name);
     if (
-      (isValidFile(file.name, validFiles)) && !isIgnoredFile(file.path, ignoreFiles)
+      (isValidFile(file.path, validFiles)) && !isIgnoredFile(file.path, ignoreFiles)
     ) {
       console.log(`Swapping template values for ${file.path}...`);
       let fileTemplate = _.template(fs.readFileSync(file.path));
