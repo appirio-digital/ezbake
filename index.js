@@ -7,6 +7,7 @@ const initialQuestions = require('./initialQuestions');
 const cwd = path.resolve(process.cwd());
 const _ = require('lodash');
 const minimatch = require('minimatch');
+const ui = new inquirer.ui.BottomBar();
 
 // Only watch for <%= %> swaps, lodash template swaps ES6 templates by default
 _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
@@ -24,17 +25,59 @@ function walkSync(dir, filelist) {
   return filelist;
 }
 
+async function checkForExistingFolder(projectName) {
+  return new Promise(
+    (resolve, reject) => {
+      let directory = path.join(cwd, `./${projectName}`);
+      let directoryExists = fs.existsSync(directory);
+      if (directoryExists) {
+        inquirer.prompt([
+          {
+            type: 'input',
+            name: 'projectName',
+            message: `${directory} already exists. Please specify a new name. If you keep the current name, it will be deleted.`,
+            default: `${projectName}`,
+            filter: (val) => {
+              return val
+                .replace(/\W+/g, ' ') // alphanumerics only
+                .trimRight()
+                .replace(/ /g, '-')
+                .toLowerCase();
+            }
+          }
+        ])
+        .then(directoryAnswers => {
+          if (directoryAnswers.projectName === projectName) {
+            const rm = spawn('rm', [`-rf`, directory]);
+            rm.on('close', code => {
+              if (code !== 0) {
+                return reject(`We've had problems removing the ${directory}. Do you have enough permissions to delete it?`);
+              }
+              ui.log.write(`! Deleted ${directory}`);
+              return resolve(projectName);
+            })
+          } else {
+            return resolve(directoryAnswers.projectName);
+          }
+        });
+      } else {
+        return resolve(projectName);
+      }
+    }
+  );
+}
+
 function cloneRepo(url, projectName) {
   return new Promise(resolve => {
     // Assumption: Any source repos will have a template branch that we can use
-    console.log(`Cloning ${url} to ./${projectName}`);
+    ui.log.write(`. Cloning ${url} to ./${projectName}\n`);
     const clone = spawn('git', [`clone`, `-b`, `template`, url, projectName]);
     clone.on('data', data => {
-      console.log(data);
+      ui.updateBottomBar(data);
     });
 
     clone.on('close', code => {
-      console.log(`Finished cloning ${url} to ./${projectName}`);
+      ui.log.write(`. Finished cloning ${url} to ./${projectName}\n`);
       resolve();
     });
 
@@ -47,14 +90,14 @@ function cloneRepo(url, projectName) {
 function deleteGitFolder(projectName) {
   return new Promise(resolve => {
     const pathToGit = path.join(cwd, `./${projectName}/.git`);
-    console.log(`Removing .git folder from ${pathToGit}`);
+    ui.log.write(`. Removing .git folder from ${pathToGit}\n`);
     const del = spawn('rm', ['-rf', pathToGit]);
     del.on('data', data => {
-      console.log(data);
+      ui.updateBottomBar(data);
     });
 
     del.on('close', code => {
-      console.log(`Finished deleting .git folder`);
+      ui.updateBottomBar(`. Finished deleting .git folder\n`);
       resolve();
     });
   });
@@ -62,7 +105,7 @@ function deleteGitFolder(projectName) {
 
 function readTemplateJson(projectName) {
   const pathToTemplateJson = path.join(cwd, `./${projectName}/template.json`);
-  console.log(`Reading ${pathToTemplateJson}...`);
+  ui.log.write(`. Reading ${pathToTemplateJson}...\n`);
   return require(pathToTemplateJson);
 }
 
@@ -94,7 +137,7 @@ function templateReplace(answers, templateJson) {
     if (
       (isValidFile(file.path, validFiles)) && !isIgnoredFile(file.path, ignoreFiles)
     ) {
-      console.log(`Swapping template values for ${file.path}...`);
+      ui.log.write(`. Swapping template values for ${file.path}...\n`);
       let fileTemplate = _.template(fs.readFileSync(file.path));
       fs.writeFileSync(file.path, fileTemplate(answers), { encoding: 'utf8' });
     }
@@ -111,12 +154,14 @@ function createEnvFile(projectName, answers) {
       return previous.concat(current);
     }, '');
     
-  fs.writeFileSync(pathToEnvFile, contents, { encoding: 'utf8' }); 
+  fs.writeFileSync(pathToEnvFile, contents, { encoding: 'utf8' });
+  ui.log.write(`. Wrote ${pathToEnvFile} successfully`);
 }
 
 async function run() {
   try {
     let answers = await inquirer.prompt(initialQuestions);
+    answers.projectName = await checkForExistingFolder(answers.projectName);
     await cloneRepo(answers.gitRepoURL, answers.projectName);
     await deleteGitFolder(answers.projectName);
     let templateJson = readTemplateJson(answers.projectName);
