@@ -93,7 +93,7 @@ function templateReplace(answers, templateJson) {
   files.forEach(file => {
     let extension = path.extname(file.name);
     if (
-      (isValidFile(file.name, validFiles)) && !isIgnoredFile(file.name, ignoreFiles)
+      (isValidFile(file.name, validFiles)) && !isIgnoredFile(file.path, ignoreFiles)
     ) {
       console.log(`Swapping template values for ${file.path}...`);
       let fileTemplate = _.template(fs.readFileSync(file.path));
