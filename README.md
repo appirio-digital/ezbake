@@ -33,6 +33,6 @@ This utility is driven by the core Node.js framework and three libraries:
 1. When prompted for a source Git repo, copy and paste a Git URL that [follows the conventions](https://github.com/appirio-digital/ads-baseline/blob/master/CONVENTIONS.md)
 1. Profit
 
-## Conventions
+## Developing a Template Project
 
-See [CONVENTIONS.MD](https://github.com/appirio-digital/ads-baseline/blob/master/CONVENTIONS.md)
+See [CONVENTIONS.MD](https://github.com/appirio-digital/ads-baseline/blob/master/CONVENTIONS.md) for instructions on how to templatize your Git project.
