@@ -6,9 +6,9 @@ module.exports = [
     default: 'ads-baseline-webapp',
     filter: (val) => {
       return val
+        .replace(/\W+/g, ' ') // alphanumerics only
+        .trimRight()
         .replace(/ /g, '-')
-        .replace(/'/g, '')
-        .replace(/"/g, '')
         .toLowerCase();
     }
   },
