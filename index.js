@@ -69,7 +69,7 @@ async function checkForExistingFolder(projectName) {
 }
 
 function cloneRepo(url, projectName) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     // Assumption: Any source repos will have a template branch that we can use
     ui.log.write(`. Cloning ${url} to ./${projectName}\n`);
     const clone = spawn('git', [`clone`, `-b`, `template`, url, projectName]);
@@ -78,12 +78,15 @@ function cloneRepo(url, projectName) {
     });
 
     clone.on('close', code => {
+      if (code !== 0) {
+        return reject(new Error(`Could not clone repository properly. Please check for the existence of a template branch or your permissions to that Git repo.`));
+      }
       ui.log.write(`. Finished cloning ${url} to ./${projectName}\n`);
-      resolve();
+      return resolve();
     });
 
     clone.on('error', error => {
-      throw error;
+      reject(error);
     });
   });
 }
@@ -156,30 +159,44 @@ function createEnvFile(projectName, answers) {
   ui.log.write(`. Wrote ${pathToEnvFile} successfully`);
 }
 
+function invalidGitRepo(error) {
+  throw new Error(`! This is not a valid ads-baseline. Please see the conventions here: https://github.com/appirio-digital/ads-baseline/blob/master/CONVENTIONS.md\n  ! ${error.message}`);
+}
+
 async function run() {
   try {
+    // Initial setup
     let answers = await inquirer.prompt(initialQuestions);
     answers.projectName = await checkForExistingFolder(answers.projectName);
-    await cloneRepo(answers.gitRepoURL, answers.projectName);
+
+    // Check if the repo is valid
+    await cloneRepo(answers.gitRepoURL, answers.projectName)
+      .catch(invalidGitRepo);
+    let templateJs = readTemplateJs(answers.projectName);
+
+    // Remove git bindings
     await deleteGitFolder(answers.projectName);
-    let templateJson = readTemplateJs(answers.projectName);
-    let templateAnswers = await inquirer.prompt(templateJson.questions);
+
+    // Ask away!
+    let templateAnswers = await inquirer.prompt(templateJs.questions);
     templateReplace(
       Object.assign(
         { ...answers, ...templateAnswers },
         { projectNameDocker: answers.projectName.replace(/-/g, '_') }
       ),
-      templateJson
+      templateJs
     );
 
-    if (templateJson.env) {
-      let envAnswers = await inquirer.prompt(templateJson.env);
+    // .env file setup
+    if (templateJs.env) {
+      let envAnswers = await inquirer.prompt(templateJs.env);
       createEnvFile(answers.projectName, envAnswers);
     }
 
+    // Remove .template.js
     deleteTemplateJs(answers.projectName);
   } catch (error) {
-    console.error(error);
+    ui.log.write(error.message);
   }
 }
 
