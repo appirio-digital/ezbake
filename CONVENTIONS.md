@@ -25,14 +25,17 @@ A `template.json` is what drives the `ads-baseline` process. It defines several 
 ```json
 {
   "valid_files": { 
-    "*.js": true,
-    "*.json": true,
-    "*.java": true,
-    "*.yml": true,
-    "*.sh": true,
-    "Dockerfile": true
+    "**/*.js": true,
+    "**/*.json": true,
+    "**/*.java": true,
+    "**/*.yml": true,
+    "**/*.sh": true,
+    "**/Dockerfile": true
   },
-  "ignore_files": {},
+  "ignore_files": {
+    "**/ignored_folder/**": true,
+    "**/.*ignore": true
+  },
   "questions": [
     {
       "type": "input",
@@ -82,9 +85,13 @@ A `template.json` is what drives the `ads-baseline` process. It defines several 
 
 The keys of the `valid_files` property are [globs](https://www.npmjs.com/package/minimatch) that we use to match files in the directory. Only files that match the glob patterns specified in this property are template replaced.
 
+All of your globs will start with `**/` to denote any path to either a particular file or set of files.  This is intentional, as `ads-baseline` will match the glob of the full path of the files it creates for you.  After the initial `**/` you can then set whatever glob pattern you like.
+
 #### ignore_files
 
 The keys of the `ignore_files` property are [globs](https://www.npmjs.com/package/minimatch) that we use to match files in the directory. Should a file match any of the globs defined here, they will **not** be template replaced.
+
+All of your globs will start with `**/` to denote any path to either a particular file or set of files.  This is intentional, as `ads-baseline` will match the glob of the full path of the files it creates for you.  After the initial `**/` you can then set whatever glob pattern you like.
 
 #### questions
 
