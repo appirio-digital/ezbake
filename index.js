@@ -103,40 +103,32 @@ function deleteGitFolder(projectName) {
   });
 }
 
-function readTemplateJson(projectName) {
-  const pathToTemplateJson = path.join(cwd, `./${projectName}/template.json`);
+function readTemplateJs(projectName) {
+  const pathToTemplateJson = path.join(cwd, `./${projectName}/.template.js`);
   ui.log.write(`. Reading ${pathToTemplateJson}...\n`);
   return require(pathToTemplateJson);
 }
 
-function deleteTemplateJson(projectName) {
-  const pathToTemplateJson = path.join(cwd, `./${projectName}/template.json`);
+function deleteTemplateJs(projectName) {
+  const pathToTemplateJson = path.join(cwd, `./${projectName}/.template.js`);
   fs.unlinkSync(pathToTemplateJson); // Bye felicia
 }
 
 function isValidFile(file, validFiles) {
   return Object.keys(validFiles)
     .some(filePattern => {
-      return minimatch(file, filePattern);
-    });
-}
-
-function isIgnoredFile(file, ignoredFiles) {
-  return Object.keys(ignoredFiles)
-    .some(filePattern => {
-      return minimatch(file, filePattern);
+      let fileMatch = minimatch(file, filePattern);
+      return fileMatch && validFiles[filePattern];
     });
 }
 
 function templateReplace(answers, templateJson) {
   const pathToProject = path.join(cwd, `./${answers.projectName}`);
-  let validFiles = templateJson.valid_files || {};
-  let ignoreFiles = templateJson.ignore_files || {};
+  let fileGlobs = templateJson.files || {};
   let files = walkSync(pathToProject);
   files.forEach(file => {
-    if (
-      (isValidFile(file.path, validFiles)) && !isIgnoredFile(file.path, ignoreFiles)
-    ) {
+    if (isValidFile(file.path, fileGlobs))
+     {
       ui.log.write(`. Swapping template values for ${file.path}...\n`);
       let fileTemplate = _.template(fs.readFileSync(file.path));
       fs.writeFileSync(file.path, fileTemplate(answers), { encoding: 'utf8' });
@@ -164,7 +156,7 @@ async function run() {
     answers.projectName = await checkForExistingFolder(answers.projectName);
     await cloneRepo(answers.gitRepoURL, answers.projectName);
     await deleteGitFolder(answers.projectName);
-    let templateJson = readTemplateJson(answers.projectName);
+    let templateJson = readTemplateJs(answers.projectName);
     let templateAnswers = await inquirer.prompt(
       templateJson.questions
     );
@@ -175,12 +167,12 @@ async function run() {
       ), templateJson
     );
 
-    if (templateJson['.env']) {
-      let envAnswers = await inquirer.prompt(templateJson['.env']);
+    if (templateJson.env) {
+      let envAnswers = await inquirer.prompt(templateJson.env);
       createEnvFile(answers.projectName, envAnswers);
     }
 
-    deleteTemplateJson(answers.projectName);
+    deleteTemplateJs(answers.projectName);
   } catch (error) {
     console.error(error);
   }
