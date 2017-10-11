@@ -26,18 +26,18 @@ function walkSync(dir, filelist) {
 }
 
 async function checkForExistingFolder(projectName) {
-  return new Promise(
-    (resolve, reject) => {
-      let directory = path.join(cwd, `./${projectName}`);
-      let directoryExists = fs.existsSync(directory);
-      if (directoryExists) {
-        inquirer.prompt([
+  return new Promise((resolve, reject) => {
+    let directory = path.join(cwd, `./${projectName}`);
+    let directoryExists = fs.existsSync(directory);
+    if (directoryExists) {
+      inquirer
+        .prompt([
           {
             type: 'input',
             name: 'projectName',
             message: `${directory} already exists. Please specify a new name. If you keep the current name, it will be deleted.`,
             default: `${projectName}`,
-            filter: (val) => {
+            filter: val => {
               return val
                 .replace(/\W+/g, ' ') // alphanumerics only
                 .trimRight()
@@ -51,20 +51,21 @@ async function checkForExistingFolder(projectName) {
             const rm = spawn('rm', [`-rf`, directory]);
             rm.on('close', code => {
               if (code !== 0) {
-                return reject(`We've had problems removing the ${directory}. Do you have enough permissions to delete it?`);
+                return reject(
+                  `We've had problems removing the ${directory}. Do you have enough permissions to delete it?`
+                );
               }
               ui.log.write(`! Deleted ${directory}`);
               return resolve(projectName);
-            })
+            });
           } else {
             return resolve(directoryAnswers.projectName);
           }
         });
-      } else {
-        return resolve(projectName);
-      }
+    } else {
+      return resolve(projectName);
     }
-  );
+  });
 }
 
 function cloneRepo(url, projectName) {
@@ -115,11 +116,17 @@ function deleteTemplateJs(projectName) {
 }
 
 function isValidFile(file, validFiles) {
-  return Object.keys(validFiles)
-    .some(filePattern => {
-      let fileMatch = minimatch(file, filePattern);
-      return fileMatch && validFiles[filePattern];
-    });
+  let fileMatches = Object.keys(validFiles).some(filePattern => {
+    let fileMatch = minimatch(file, filePattern);
+    return fileMatch && validFiles[filePattern];
+  });
+
+  let ignoreMatches = Object.keys(validFiles).some(filePattern => {
+    let fileMatch = minimatch(file, filePattern);
+    return fileMatch && validFiles[filePattern] === false;
+  });
+
+  return fileMatches && !ignoreMatches;
 }
 
 function templateReplace(answers, templateJson) {
@@ -127,8 +134,7 @@ function templateReplace(answers, templateJson) {
   let fileGlobs = templateJson.files || {};
   let files = walkSync(pathToProject);
   files.forEach(file => {
-    if (isValidFile(file.path, fileGlobs))
-     {
+    if (isValidFile(file.path, fileGlobs)) {
       ui.log.write(`. Swapping template values for ${file.path}...\n`);
       let fileTemplate = _.template(fs.readFileSync(file.path));
       fs.writeFileSync(file.path, fileTemplate(answers), { encoding: 'utf8' });
@@ -140,12 +146,12 @@ function createEnvFile(projectName, answers) {
   const pathToEnvFile = path.join(cwd, `./${projectName}/.env`);
   let contents = Object.keys(answers)
     .map(answerKey => {
-      return `${answerKey}=${answers[answerKey]}\n`
+      return `${answerKey}=${answers[answerKey]}\n`;
     })
     .reduce((previous, current) => {
       return previous.concat(current);
     }, '');
-    
+
   fs.writeFileSync(pathToEnvFile, contents, { encoding: 'utf8' });
   ui.log.write(`. Wrote ${pathToEnvFile} successfully`);
 }
@@ -157,14 +163,13 @@ async function run() {
     await cloneRepo(answers.gitRepoURL, answers.projectName);
     await deleteGitFolder(answers.projectName);
     let templateJson = readTemplateJs(answers.projectName);
-    let templateAnswers = await inquirer.prompt(
-      templateJson.questions
-    );
+    let templateAnswers = await inquirer.prompt(templateJson.questions);
     templateReplace(
       Object.assign(
         { ...answers, ...templateAnswers },
         { projectNameDocker: answers.projectName.replace(/-/g, '_') }
-      ), templateJson
+      ),
+      templateJson
     );
 
     if (templateJson.env) {
