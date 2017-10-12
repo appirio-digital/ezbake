@@ -29,5 +29,11 @@ module.exports = [
     name: 'gitRepoURL',
     message: 'Please copy/paste the URL of the Git repo',
     default: 'https://github.com/appirio-digital/ads-baseline-webapp.git'
+  },
+  {
+    type: 'input',
+    name: 'gitOriginURL',
+    message: '(Optional) Please copy/paste the URL of the remote repo this template will be pushed to',
+    default: null
   }
 ];
