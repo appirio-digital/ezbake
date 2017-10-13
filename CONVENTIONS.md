@@ -22,7 +22,7 @@
 
 `index.js` is what drives the `ezbake` process. It defines several things for the utility.
 
-### Sample 
+#### Sample 
 
 ```js
 module.exports = {
@@ -98,21 +98,21 @@ module.exports = {
 }
 ```
 
-### Usage
+#### Usage
 
-#### source
+##### source
 
 The keys of the `source` property are [globs](https://www.npmjs.com/package/minimatch) that we use to match files in the directory. Only files that match the glob patterns and with the value set to `true` are template replaced.
 
 All of your globs will start with `**/` to denote any path to either a particular file or set of files.  This is intentional, as `ads-baseline` will match the glob of the full path of the files it creates for you.  After the initial `**/` you can then set whatever glob pattern you like.
 
-#### ingredients
+##### ingredients
 
 The keys of the `ingredients` is where you would define the inputs from a user via [inquirer](https://www.npmjs.com/package/inquirer).  See the examples on the Inquirer documentation to see how to structure specific questions.  You have full control over the `inquirer` questions to ask, as well as validations, filters, etc.
 
 You can then embed in your files the names of the question prompts.  For example, above, `localPortWebApp` would correspond to a templatized value of `<%= localPortWebApp %>` on some file in your project.
 
-#### env
+##### env
 
 The keys of the `env` is similar to `questions`. They are also [inquirer](https://www.npmjs.com/package/inquirer) prompts that then map to a corresponding .env file value.  For example, the above file would generate a `.env` file in the root of the generated project that looks like the following:
 
@@ -120,3 +120,27 @@ The keys of the `env` is similar to `questions`. They are also [inquirer](https:
 JWT_SECRET=shhh_its_a_secret
 ```
 
+### recipes
+
+`ezbake` as of v2.0.0 introduces a concept called `recipes`. In short, these are configurable generators for any type of file you wish to create.
+
+To see an example: https://github.com/ericnograles/ads-baseline-madlibs/tree/ezbake
+
+#### Conventions
+
+1. One file = one recipe
+2. Recipe name = `.ezbake/recipes/<Recipe name>.js`
+
+#### Recipe Definitions
+
+##### destination
+
+The destination directory on which the created file will live. This is in relation to the root of a project that was scaffolded by `.ezbake`
+
+##### source
+
+A [JavaScript template literal string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) of the file's contents, with template strings to swap out.
+
+##### ingredients
+
+The keys of the `ingredients` is where you would define the inputs from a user via [inquirer](https://www.npmjs.com/package/inquirer).  See the examples on the Inquirer documentation to see how to structure specific questions.  You have full control over the `inquirer` questions to ask, as well as validations, filters, etc.
