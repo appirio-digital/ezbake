@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const inquirer = require('inquirer');
-const initialQuestions = require('./initialQuestions');
+const args = require('yargs').argv;
+const baseIngredients = require('./ingredients');
 const _ = require('lodash');
 
 const {
@@ -18,10 +19,11 @@ const {
 } = require('./tasks/filesystem');
 
 const {
-  readTemplateJs,
-  deleteTemplateJs,
-  templateReplace
-} = require('./tasks/template');
+  readProjectRecipe,
+  bakeProject
+} = require('./tasks/project');
+
+const { bakeRecipe } = require('./tasks/recipes');
 
 const ui = new inquirer.ui.BottomBar();
 
@@ -34,50 +36,53 @@ function invalidGitRepo(error) {
   );
 }
 
-async function run() {
+async function bake() {
   try {
-    // Initial setup
-    let answers = await inquirer.prompt(initialQuestions);
-    answers.projectName = await checkForExistingFolder(ui, answers.projectName);
+    // Mise en place
+    let projectIngredients = await inquirer.prompt(baseIngredients);
+    projectIngredients.projectName = await checkForExistingFolder(ui, projectIngredients.projectName);
 
     // Check if the repo is valid
-    await cloneRepo(ui, answers.gitRepoURL, answers.projectName).catch(
+    await cloneRepo(ui, projectIngredients.gitRepoURL, projectIngredients.projectName).catch(
       invalidGitRepo
     );
-    let templateJs = readTemplateJs(ui, answers.projectName);
+    let recipe = readProjectRecipe(ui, projectIngredients.projectName);
 
     // Remove git bindings
-    await deleteGitFolder(ui, answers.projectName);
+    await deleteGitFolder(ui, projectIngredients.projectName);
 
     // Ask away!
-    let templateAnswers = await inquirer.prompt(templateJs.questions);
-    templateReplace(
+    let ingredients = await inquirer.prompt(recipe.ingredients);
+    bakeProject(
       ui,
       Object.assign(
-        { ...answers, ...templateAnswers },
-        { projectNameDocker: answers.projectName.replace(/-/g, '_') }
+        { ...projectIngredients, ...ingredients },
+        { projectNameDocker: projectIngredients.projectName.replace(/-/g, '_') }
       ),
-      templateJs
+      recipe
     );
 
     // .env file setup
-    if (templateJs.env) {
-      let envAnswers = await inquirer.prompt(templateJs.env);
-      createEnvFile(ui, answers.projectName, envAnswers);
+    if (recipe.env) {
+      let envAnswers = await inquirer.prompt(recipe.env);
+      createEnvFile(ui, projectIngredients.projectName, envAnswers);
     }
-
-    // Remove .template.js
-    deleteTemplateJs(ui, answers.projectName);
 
     // Finally, establish a local .git binding
     // And optionally push to a specified remote repo
-    await establishLocalGitBindings(ui, answers.projectName);
-    if (answers.gitOriginURL) {
-      await pushLocalGitToOrigin(ui, answers.gitOriginURL, answers.projectName);
+    await establishLocalGitBindings(ui, projectIngredients.projectName);
+    if (projectIngredients.gitOriginURL) {
+      await pushLocalGitToOrigin(ui, projectIngredients.gitOriginURL, projectIngredients.projectName);
     }
   } catch (error) {
     ui.log.write(error.message);
   }
 }
 
-run();
+if (args.start) {
+  bake();
+} else {
+  if (args.recipe) {
+    bakeRecipe(ui, args.recipe)
+  }
+}

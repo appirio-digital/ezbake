@@ -6,9 +6,8 @@ const cwd = path.resolve(process.cwd());
 const { walkSync } = require('./filesystem');
 
 module.exports = {
-  readTemplateJs,
-  deleteTemplateJs,
-  templateReplace
+  readProjectRecipe,
+  bakeProject
 };
 
 function isValidFile(file, validFiles) {
@@ -25,20 +24,15 @@ function isValidFile(file, validFiles) {
   return fileMatches && !ignoreMatches;
 }
 
-function readTemplateJs(ui, projectName) {
-  const pathToTemplateJs = path.join(cwd, `./${projectName}/.template.js`);
-  ui.log.write(`. Reading ${pathToTemplateJs}...\n`);
-  return require(pathToTemplateJs);
+function readProjectRecipe(ui, projectName) {
+  const pathToRecipe = path.join(cwd, `./${projectName}/.ezbake`);
+  ui.log.write(`. Reading ${pathToRecipe}...\n`);
+  return require(pathToRecipe);
 }
 
-function deleteTemplateJs(ui, projectName) {
-  const pathToTemplateJs = path.join(cwd, `./${projectName}/.template.js`);
-  fs.unlinkSync(pathToTemplateJs); // Bye felicia
-}
-
-function templateReplace(ui, answers, templateJs) {
+function bakeProject(ui, answers, recipe) {
   const pathToProject = path.join(cwd, `./${answers.projectName}`);
-  let fileGlobs = templateJs.files || {};
+  let fileGlobs = recipe.source || {};
   let files = walkSync(pathToProject);
   files.forEach(file => {
     if (isValidFile(file.path, fileGlobs)) {

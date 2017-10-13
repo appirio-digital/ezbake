@@ -6,14 +6,41 @@ module.exports = {
   cloneRepo,
   deleteGitFolder,
   establishLocalGitBindings,
-  pushLocalGitToOrigin
+  pushLocalGitToOrigin,
+  stageChanges
 };
+
+function stageChanges(ui, commitMessage) {
+  return new Promise(
+    (resolve, reject) => {
+      ui.log.write(
+        `. Staging git changes with commit message "${commitMessage}". \n`
+      );
+      exec(
+        `git add . && git commit -m "${commitMessage}"`,
+        (err, stdout, stderr) => {
+          if (err || stderr) {
+            return reject(
+              new Error(
+                `! Could not stage your git changes. Are you in a valid git repository?`
+              )
+            );
+          }
+          ui.log.write(
+            `. Finished staging changes. \n`
+          );
+          return resolve();
+        }
+      );
+    }
+  );
+}
 
 function cloneRepo(ui, url, projectName) {
   return new Promise((resolve, reject) => {
-    // Assumption: Any source repos will have a template branch that we can use
+    // Assumption: Any source repos will have an ezbake branch that we can use
     ui.log.write(`. Cloning ${url} to ./${projectName}\n`);
-    const clone = spawn('git', [`clone`, `-b`, `template`, url, projectName]);
+    const clone = spawn('git', [`clone`, `-b`, `ezbake`, url, projectName]);
     clone.on('data', data => {
       ui.updateBottomBar(data);
     });
@@ -22,7 +49,7 @@ function cloneRepo(ui, url, projectName) {
       if (code !== 0) {
         return reject(
           new Error(
-            `Could not clone repository properly. Please check for the existence of a template branch or your permissions to that Git repo.`
+            `Could not clone repository properly. Please check for the existence of an ezbake branch or your permissions to that Git repo.`
           )
         );
       }
@@ -64,7 +91,7 @@ function establishLocalGitBindings(ui, projectName) {
     const pathToProject = path.join(cwd, `./${projectName}`);
     ui.log.write(`. Establishing new local .git bindings...\n`);
     exec(
-      `cd ${pathToProject} && git init && git add . && git commit -m "initial scaffold"`,
+      `cd ${pathToProject} && git init && git add . && git commit -m "get it while it's hot!"`,
       (err, stdout, stderr) => {
         if (err || stderr) {
           return reject(

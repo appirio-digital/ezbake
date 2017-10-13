@@ -9,6 +9,14 @@ module.exports = {
   checkForExistingFolder
 };
 
+function createDirectory(path) {
+  return new Promise(
+    (resolve, reject) => {
+      
+    }
+  );
+}
+
 function createEnvFile(ui, projectName, answers) {
   const pathToEnvFile = path.join(cwd, `./${projectName}/.env`);
   let contents = Object.keys(answers)

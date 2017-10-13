@@ -1,18 +1,19 @@
 {
-  "name": "ads-baseline",
+  "name": "ezbake",
   "version": "1.1.0",
-  "description": "A command line utility to quickly scaffold ads-baseline template brances for a client project",
+  "description": "The project scaffolder for everyone",
   "main": "index.js",
-  "repository": "https://github.com/appirio-digital/ads-baseline.git",
+  "repository": "https://github.com/appirio-digital/ezbake.git",
   "author": "Eric Nograles <enograles@appirio.com>",
   "license": "MIT",
   "private": true,
   "dependencies": {
     "inquirer": "^3.3.0",
     "lodash": "^4.17.4",
-    "minimatch": "^3.0.4"
+    "minimatch": "^3.0.4",
+    "yargs": "^9.0.1"
   },
   "bin": {
-    "ads-baseline": "./index.js"
+    "ezbake": "./index.js"
   }
 }
