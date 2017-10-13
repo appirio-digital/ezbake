@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "fs-extra": "^4.0.2",
     "inquirer": "^3.3.0",
     "lodash": "^4.17.4",
     "minimatch": "^3.0.4",

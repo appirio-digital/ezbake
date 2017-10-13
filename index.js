@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 const inquirer = require('inquirer');
-const args = require('yargs').argv;
-const baseIngredients = require('./ingredients');
 const _ = require('lodash');
+const yargs = require('yargs');
 
 const {
   cloneRepo,
@@ -19,6 +18,8 @@ const {
 } = require('./tasks/filesystem');
 
 const {
+  plug,
+  unplug,
   readProjectRecipe,
   bakeProject
 } = require('./tasks/project');
@@ -36,10 +37,22 @@ function invalidGitRepo(error) {
   );
 }
 
-async function bake() {
+async function bake(args = {}) {
   try {
+    let baseIngredients = require('./ingredients');
+
     // Mise en place
+    baseIngredients = baseIngredients
+      .filter(ingredient => {
+        if (args[ingredient.name]) {
+          console.log(`> ${ingredient.name}: ${args[ingredient.name]}`);
+          return false;
+        }
+        return true;
+      });
+    
     let projectIngredients = await inquirer.prompt(baseIngredients);
+    projectIngredients = Object.assign(projectIngredients, args);
     projectIngredients.projectName = await checkForExistingFolder(ui, projectIngredients.projectName);
 
     // Check if the repo is valid
@@ -79,10 +92,62 @@ async function bake() {
   }
 }
 
-if (args.start) {
-  bake();
-} else {
-  if (args.recipe) {
-    bakeRecipe(ui, args.recipe)
-  }
+function sanitizeArgs(argv) {
+  // Remove any yargs-specific keys to avoid false positives
+  let args = { ...argv };
+  delete args._;
+  delete args.help;
+  delete args.version;
+  delete args['$0'];
+  return args;
 }
+
+console.log(require('./logo'));
+
+// Understood commands
+const args = yargs
+  .command('plug', 'ezbake-ifies a project', () => {}, async (argv) => {
+    await plug(ui);
+    process.exit(0);
+  })
+  .command('unplug', 'removes ezbake from a project', () => {}, (argv) => {
+    unplug(ui);
+    process.exit(0);
+  })
+  .command('prepare', 'creates a new scaffold from an ezbake project in a specified Git source', (yargs) => {
+    return yargs
+      .option('r', {
+        alias: 'gitRepoURL',
+        describe: 'The URL of the source Git repo to ezbake'
+      })
+      .option('o', {
+        alias: 'gitOriginURL',
+        describe: 'The URL of the Git destination repo to push to as a remote origin'
+      });
+  }, async (argv) => {
+    let args = sanitizeArgs(argv);
+    await bake(args);
+    process.exit(0);
+  })
+  .command('cook', 'for use in an exisiting ezbake project, cooks a recipe that has been defined by the author', (yargs) => {
+    return yargs.option('r', {
+      alias: 'recipe',
+      describe: '(Required) The URL of the Git repo to ezbake'
+    })
+  }, async (argv) => {
+    let args = sanitizeArgs(argv);
+    if (!args.recipe) {
+      console.log(`! You must specify a recipe to cook`);
+      process.exit(1);
+    }
+    await bakeRecipe(ui, args.recipe);
+    process.exit(0);
+  })
+  .command('*', 'the default command', () => {}, (argv) => {
+    console.log('! Welcome to ezbake');
+    console.log(`? Please type ezbake --help for information.`)
+    process.exit(0);
+  })
+  .help()
+  .argv;
+

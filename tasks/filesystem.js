@@ -1,4 +1,5 @@
-const fs = require('fs');
+const inquirer = require('inquirer');
+const fs = require('fs-extra');
 const path = require('path');
 const { spawn, exec } = require('child_process');
 const cwd = path.resolve(process.cwd());
@@ -8,14 +9,6 @@ module.exports = {
   walkSync,
   checkForExistingFolder
 };
-
-function createDirectory(path) {
-  return new Promise(
-    (resolve, reject) => {
-      
-    }
-  );
-}
 
 function createEnvFile(ui, projectName, answers) {
   const pathToEnvFile = path.join(cwd, `./${projectName}/.env`);

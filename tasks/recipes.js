@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const inquirer = require('inquirer');
 const _ = require('lodash');
@@ -25,7 +25,7 @@ async function bakeRecipe(ui, name) {
     
     ui.log.write(`. Finding recipe for ${name} in ${recipeDir}...`);
     if (matchingRecipe) {
-      ui.log.write(`. Baking ${name}...`);
+      ui.log.write(`. Cooking ${name}...`);
       let recipe = require(path.join(recipeDir, `/${matchingRecipe}`));
       let destination = path.join(cwd, recipe.destination);
       let ingredients = {};
@@ -41,8 +41,8 @@ async function bakeRecipe(ui, name) {
         fs.mkdirSync(destination);
       }
       fs.writeFileSync(fileName, bake(ingredients), { encoding: 'utf-8'});
-      ui.log.write(`. Successfully baked ${name}!`);
-      await stageChanges(ui, `ezbake - ${name}`);
+      ui.log.write(`. Successfully cooked ${name}!`);
+      await stageChanges(ui, `ezbake - ${fileName}`);
       process.exit(0);
     }
   
