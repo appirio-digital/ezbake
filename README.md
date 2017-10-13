@@ -69,7 +69,7 @@ Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/ma
 
 #### Sample
 
-`ezbake prepare -r=https://github.com/ericnograles/ads-baseline-madlibs.git`
+`ezbake prepare -r https://github.com/ericnograles/ads-baseline-madlibs.git`
 
 ### ezbake cook [options]
 
@@ -88,3 +88,21 @@ Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/ma
 #### Sample
 
 `ezbake cook -r Query`
+
+### ezbake sync [options]
+
+#### Description
+
+This command allows a user to resynchronize their `.ezbake` folder with the latest published by the author.
+
+As an escape hatch, a user can also manually specify another Git source from which to pull the syncing operation.
+
+**Note**: This is a destructive action and will remove your project's recipes and replace them with whatever recipes are defined from the Git repo you specify at the time of execution.
+
+#### Options
+
+* `-r`: (Optional) The full URL of a Git repo to use a source. This Git repo should have an `ezbake` branch which has been initialized with `ezbake init` by the author.
+
+#### Sample
+
+`ezbake sync -r https://github.com/ericnograles/ads-baseline-madlibs.git`
