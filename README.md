@@ -38,7 +38,7 @@ You may also execute `ezbake <command> --help` to see the list of options per co
 
 #### Description
 
-This command is intended to add `ezbake` support to a project. This will create an `.ezbake` folder in the current working directory.
+This command is intended to add `ezbake` support to a project. This will create an `.ezbake` folder in the current working directory.  This command is primarily used by authors who want to enable `ezbake` templating for their users.
 
 #### Options
 
