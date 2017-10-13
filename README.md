@@ -67,6 +67,10 @@ Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/ma
 * `-r`: The full URL of the Git repo to use a source. This Git repo should have an `ezbake` branch which has been initialized with `ezbake init`.
 * `-o`: The full URL of the Git repo to use as the origin for the created ezbake scaffold. It should be a completely empty repository.
 
+#### Sample
+
+`ezbake prepare -r=https://github.com/ericnograles/ads-baseline-madlibs.git`
+
 ### ezbake cook [options]
 
 #### Description
@@ -79,3 +83,6 @@ Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/ma
 
 * `-r`: The name of the recipe to cook. These are the recipes defined in the `.ezbake/recipes` folder.
 
+#### Sample
+
+`ezbake cook -r Query`
