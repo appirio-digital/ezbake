@@ -1,22 +1,18 @@
 # ezbake
 
-**The project scaffolder for everyone**
+**"The Project Scaffolder for Everyone"**
 
-ezbake is the command line utility for authoring, scaffolding, and distributing baseline projects of all types.
+## The Problem
 
-## Goals
+Most project scaffolders available enforce some very heavy opinions and conventions. Instead of letting an author simply layer on a utility that templatizes a project, most scaffolders force authors to adhere to strict guidelines and structures.
 
-1. **Anyone can create a scaffold**: Low-fi, easy to understand conventions aimed at ADS work
-1. **Onboarding in 15 minutes or less**: A brand new developer should be up and running quickly
-1. **Opinionated, but open to extension**: Goes easy on crazy abstractions, but can be extended to scaffold most any type of project
+No more! `ezbake` is the utility that works _for_ the project author and not vice versa. Layer on `ezbake` and remove it at will.  Templatize all or part of your project.  Release to consumers.  Enhance it with recipes.
 
-## Architecture
+Have your cake and it eat it too with `ezbake`.
 
-This utility is driven by the core Node.js framework and three libraries:
+## Developing an `ezbake` Project
 
-* [inquirer](https://www.npmjs.com/package/inquirer): Prettified console prompts
-* [lodash](https://www.npmjs.com/package/lodash): Swiss-army knife JavaScript library for templating
-* [minimatch](https://www.npmjs.com/package/minimatch): The official NPM library for glob matching
+See [CONVENTIONS.MD](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md) for instructions on how to templatize your Git project.
 
 ## Prerequisites
 
@@ -28,14 +24,9 @@ This utility is driven by the core Node.js framework and three libraries:
 
 `npm install -g https://github.com/appirio-digital/ezbake.git`
 
-## Starting a New ezbake Project
+## Scaffolding an ezbake Project
 
 1. Execute `ezbake --start`
 1. Answer the prompts
 1. When prompted for a source Git repo, copy and paste a Git URL that [follows the conventions](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md)
-1. Profit
-
-## Developing a Template Project
-
-See [CONVENTIONS.MD](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md) for instructions on how to templatize your Git project.
-
+1. Have your cake and eat it too
