@@ -1,5 +1,6 @@
 const path = require('path');
 const cwd = path.resolve(process.cwd());
+const rimraf = require('rimraf');
 const { spawn, exec } = require('child_process');
 
 module.exports = {
@@ -67,22 +68,9 @@ function deleteGitFolder(ui, projectName) {
   return new Promise((resolve, reject) => {
     const pathToGit = path.join(cwd, `./${projectName}/.git`);
     ui.log.write(`. Removing .git folder from ${pathToGit}\n`);
-    const del = spawn('rm', ['-rf', pathToGit]);
-    del.on('data', data => {
-      ui.updateBottomBar(data);
-    });
-
-    del.on('close', code => {
-      if (code !== 0) {
-        return reject(
-          new Error(
-            `Could not delete .git from the template. Do you have the proper permissions on this folder?`
-          )
-        );
-      }
-      ui.log.write(`. Finished deleting .git folder\n`);
-      return resolve();
-    });
+    rimraf.sync(pathToGit);
+    ui.log.write(`. Finished deleting .git folder\n`);
+    resolve();
   });
 }
 
