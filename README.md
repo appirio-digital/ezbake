@@ -64,7 +64,7 @@ Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/ma
 
 #### Options
 
-* `-r`: The full URL of the Git repo to use a source. This Git repo should have an `ezbake` branch which has been initialized with `ezbake init`.
+* `-r`: The full URL of the Git repo to use a source. This Git repo should have an `ezbake` branch which has been initialized with `ezbake init` by the author.
 * `-o`: The full URL of the Git repo to use as the origin for the created ezbake scaffold. It should be a completely empty repository.
 
 #### Sample
@@ -75,7 +75,9 @@ Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/ma
 
 #### Description
 
-This command is to be used within a project that has been ezbake-ified using `ezbake init`.  This is the command which will cook a recipe for the user.
+This command is to be used within a project that has been created using `ezbake prepare`.  This is the command which will cook a recipe for the user.  Authors should specify the available Recipes in their project's README.md.
+
+Optionally, you may look in the project's `.ezbake/recipes` folder to see what is available.
 
 Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md) for more details.
 
