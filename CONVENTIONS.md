@@ -1,8 +1,8 @@
-# ads-baseline Conventions
+# ezbake Conventions
 
 ## Introduction
 
-`ads-baseline` first prompts the user for four items:
+`ezbake` first prompts the user for four items:
 
 1. A name for the project
     * Spaces are replaced with dashes unless it's Docker-related, in which case spaces are replaced with underscores
@@ -13,18 +13,20 @@
 ## Source Git Repo Assumptions
 
 1. It is accessible from your machine, either via https or ssh links
-1. It has a `template` branch that `ads-baseline` will use a source
-1. It has a valid `.template.js` at the root
+1. It has an `ezbake` branch that `ads-baseline` will use a source
+1. It has a valid `.ezbake` folder with, at a minimum, an `index.js` that defines the project structure
 
-## .template.js
+## `.ezbake` folder
 
-A `.template.js` is what drives the `ads-baseline` process. It defines several things for the utility.
+### index.js
+
+`index.js` is what drives the `ezbake` process. It defines several things for the utility.
 
 ### Sample 
 
 ```js
 module.exports = {
-  files: { 
+  source: { 
     '**/*.js': true,
     '**/*.json': true,
     '**/*.java': true,
@@ -33,7 +35,7 @@ module.exports = {
     '**/.vscode/*.json': true,
     '**/Dockerfile': true
   },
-  questions: [
+  ingredients: [
     {
       type: 'input',
       name: 'localPortPostgres',
@@ -98,15 +100,15 @@ module.exports = {
 
 ### Usage
 
-#### files
+#### source
 
-The keys of the `files` property are [globs](https://www.npmjs.com/package/minimatch) that we use to match files in the directory. Only files that match the glob patterns and with the value set to `true` are template replaced.
+The keys of the `source` property are [globs](https://www.npmjs.com/package/minimatch) that we use to match files in the directory. Only files that match the glob patterns and with the value set to `true` are template replaced.
 
 All of your globs will start with `**/` to denote any path to either a particular file or set of files.  This is intentional, as `ads-baseline` will match the glob of the full path of the files it creates for you.  After the initial `**/` you can then set whatever glob pattern you like.
 
-#### questions
+#### ingredients
 
-The keys of the `questions` is where you would define the inputs from a user via [inquirer](https://www.npmjs.com/package/inquirer).  See the examples on the Inquirer documentation to see how to structure specific questions.  You have full control over the `inquirer` questions to ask, as well as validations, filters, etc.
+The keys of the `ingredients` is where you would define the inputs from a user via [inquirer](https://www.npmjs.com/package/inquirer).  See the examples on the Inquirer documentation to see how to structure specific questions.  You have full control over the `inquirer` questions to ask, as well as validations, filters, etc.
 
 You can then embed in your files the names of the question prompts.  For example, above, `localPortWebApp` would correspond to a templatized value of `<%= localPortWebApp %>` on some file in your project.
 
