@@ -13,8 +13,8 @@
 ## Source Git Repo Assumptions
 
 1. It is accessible from your machine, either via https or ssh links
-1. It has an `ezbake` branch that `ads-baseline` will use a source
-1. It has a valid `.ezbake` folder with, at a minimum, an `index.js` that defines the project structure
+1. It has an `ezbake` branch
+1. The `ezbake` branch has been setup with `ezbake plug`
 
 ## `.ezbake` folder
 
