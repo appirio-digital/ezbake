@@ -28,9 +28,9 @@ This utility is driven by the core Node.js framework and three libraries:
 
 `npm install -g https://github.com/appirio-digital/ezbake.git`
 
-## Usage
+## Starting a New ezbake Project
 
-1. Execute `ezbake`
+1. Execute `ezbake --start`
 1. Answer the prompts
 1. When prompted for a source Git repo, copy and paste a Git URL that [follows the conventions](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md)
 1. Profit
@@ -38,3 +38,4 @@ This utility is driven by the core Node.js framework and three libraries:
 ## Developing a Template Project
 
 See [CONVENTIONS.MD](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md) for instructions on how to templatize your Git project.
+
