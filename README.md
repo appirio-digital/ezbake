@@ -14,6 +14,8 @@ Have your cake and it eat it too with `ezbake`.
 
 See [CONVENTIONS.MD](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md) for instructions on how to templatize your Git project.
 
+Here is a sample repo which is `ezbake` enabled: https://github.com/ericnograles/ads-baseline-madlibs/tree/ezbake
+
 ## Prerequisites
 
 1. [Node Version Manager](https://github.com/creationix/nvm)
