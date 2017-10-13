@@ -5,12 +5,14 @@ const _ = require('lodash');
 const rimraf = require('rimraf');
 const cwd = path.resolve(process.cwd());
 const { walkSync } = require('./filesystem');
+const { cloneRepo } = require('./git');
 const { spawn, exec } = require('child_process');
 
 module.exports = {
   plug,
   unplug,
-  readProjectRecipe,
+  sync,
+  readAndInitializeProjectRecipe,
   bakeProject
 };
 
@@ -42,6 +44,48 @@ function unplug(ui) {
   ui.log.write(`. Successfully unplugged ezbake from ${cwd}...`);
 }
 
+function sync(ui, args = {}) {
+  return new Promise(
+    async (resolve, reject) => {
+      const pathToEzBake = path.join(cwd, './.ezbake');
+      const pathToGitSource = path.join(cwd, './.ezbake/.gitsource');
+      
+      const uuidv1 = require('uuid/v1');
+      let tempFolderName = uuidv1();
+      if (!args.gitRepoURL && !fs.existsSync(pathToGitSource)) {
+        throw new Error(`! No Git URL specified and ${pathToGitSource} not found.`);
+      }
+    
+      if (!args.gitRepoURL) {
+        args.gitRepoURL = fs.readFileSync(pathToGitSource, {encoding: 'utf8'}).toString();
+        console.log(args.gitRepoURL);
+      } else {
+        ui.log.write(`> Manual override, cloning from ${args.gitRepoURL}`);
+      }
+    
+      await cloneRepo(ui, args.gitRepoURL, tempFolderName).catch(error => {
+        throw new Error(`! Could not clone source repo. Please try again. ${error.message}`);
+      });
+    
+      const pathToUpdatedEzBake = path.join(cwd, `/${tempFolderName}/.ezbake`);
+      ui.log.write(`. Retrieved latest from ${args.gitRepoURL} to ${pathToUpdatedEzBake}`);
+      rimraf.sync(pathToEzBake);
+      fs.copy(pathToUpdatedEzBake, pathToEzBake, {overwrite: true}, (err) => {
+        if (err) {
+          return reject(new Error(`! Could not copy ${pathToUpdatedEzBake} to ${pathToEzBake}. Please check your permissions and try again.`));
+        }
+        ui.log.write(`. Successfully synced in ezbake from ${pathToUpdatedEzBake}`);
+        ui.log.write(`. Updating .gitsource to ${args.gitRepoURL}`);
+        fs.writeFileSync(path.join(pathToEzBake, '/.gitsource'), args.gitRepoURL, { encoding: 'utf-8'});
+        ui.log.write(`. Finished updating .gitsource to ${args.gitRepoURL}`);
+        rimraf.sync(path.join(cwd, `/${tempFolderName}`));
+        ui.log.write(`. Removed ${pathToUpdatedEzBake}`);
+        return resolve();
+      });
+    }
+  )
+}
+
 function isValidFile(file, validFiles) {
   let fileMatches = Object.keys(validFiles).some(filePattern => {
     let fileMatch = minimatch(file, filePattern);
@@ -56,9 +100,14 @@ function isValidFile(file, validFiles) {
   return fileMatches && !ignoreMatches;
 }
 
-function readProjectRecipe(ui, projectName) {
+function readAndInitializeProjectRecipe(ui, projectName, gitRepoURL) {
   const pathToRecipe = path.join(cwd, `./${projectName}/.ezbake`);
   ui.log.write(`. Reading ${pathToRecipe}...\n`);
+
+  // Create a .gitsource file with the original gitRepoURL specified for sync support
+  ui.log.write(`. Writing .gitsource to .ezbake project`);
+  fs.writeFileSync(path.join(pathToRecipe, '/.gitsource'), gitRepoURL, { encoding: 'utf-8'});
+  ui.log.write(`. Finished writing .gitsource to .ezbake project`);
   return require(pathToRecipe);
 }
 

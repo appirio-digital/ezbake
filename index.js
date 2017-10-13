@@ -20,7 +20,8 @@ const {
 const {
   plug,
   unplug,
-  readProjectRecipe,
+  sync,
+  readAndInitializeProjectRecipe,
   bakeProject
 } = require('./tasks/project');
 
@@ -59,7 +60,7 @@ async function bake(args = {}) {
     await cloneRepo(ui, projectIngredients.gitRepoURL, projectIngredients.projectName).catch(
       invalidGitRepo
     );
-    let recipe = readProjectRecipe(ui, projectIngredients.projectName);
+    let recipe = readAndInitializeProjectRecipe(ui, projectIngredients.projectName, projectIngredients.gitRepoURL);
 
     // Remove git bindings
     await deleteGitFolder(ui, projectIngredients.projectName);
@@ -104,6 +105,7 @@ function sanitizeArgs(argv) {
 
 console.log(require('./logo'));
 
+// TODO: Refactor as command folders
 // Understood commands
 const args = yargs
   .command('plug', 'ezbake-ifies a project', () => {}, async (argv) => {
@@ -127,6 +129,20 @@ const args = yargs
   }, async (argv) => {
     let args = sanitizeArgs(argv);
     await bake(args);
+    process.exit(0);
+  })
+  .command('sync', 'synchronizes the .ezbake folder from the source project', (yargs) => {
+    return yargs
+      .option('r', {
+        alias: 'gitRepoURL',
+        describe: '(Optional) The URL of the source ezbake project Git repo. Leaving this blank will simply read from .ezbake/.gitsource, which was established after ezbake prepare'
+      });
+  }, async (argv) => {
+    let args = sanitizeArgs(argv);
+    await sync(ui, args).catch(error => { 
+      ui.log.write(error.message);
+      process.exit(1);
+    });
     process.exit(0);
   })
   .command('cook', 'for use in an exisiting ezbake project, cooks a recipe that has been defined by the author', (yargs) => {
