@@ -2,7 +2,7 @@
 
 # ezbake
 
-**"The Project Scaffolder for Everyone"**
+**"The Scaffolder for Everyone"**
 
 ## The Problem
 
