@@ -126,10 +126,14 @@ JWT_SECRET=shhh_its_a_secret
 
 To see an example: https://github.com/ericnograles/ads-baseline-madlibs/tree/ezbake
 
+#### Usage
+
+In the root of a project with an `.ezbake` directory, execute `ezbake --recipe=RecipeName`
+
 #### Conventions
 
 1. One file = one recipe
-2. Recipe name = `.ezbake/recipes/<Recipe name>.js`
+2. RecipeName = `.ezbake/recipes/<RecipeName>.js`
 
 #### Recipe Definitions
 
