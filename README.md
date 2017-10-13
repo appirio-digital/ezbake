@@ -1,6 +1,6 @@
 # ezbake
 
-## The project scaffolder for everyone
+**The project scaffolder for everyone**
 
 ezbake is the command line utility for authoring, scaffolding, and distributing baseline projects of all types.
 
