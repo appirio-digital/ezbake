@@ -1,6 +1,8 @@
-# ads-baseline
+# ezbake
 
-The Appirio Digital Studios command line utility for authoring, scaffolding, and distributing baseline projects.
+## The project scaffolder for everyone
+
+ezbake is the command line utility for authoring, scaffolding, and distributing baseline projects of all types.
 
 ## Goals
 
@@ -24,15 +26,15 @@ This utility is driven by the core Node.js framework and three libraries:
 
 ## Installation
 
-`npm install -g https://github.com/appirio-digital/ads-baseline.git`
+`npm install -g https://github.com/appirio-digital/ezbake.git`
 
 ## Usage
 
-1. Execute `ads-baseline`
+1. Execute `ezbake`
 1. Answer the prompts
-1. When prompted for a source Git repo, copy and paste a Git URL that [follows the conventions](https://github.com/appirio-digital/ads-baseline/blob/master/CONVENTIONS.md)
+1. When prompted for a source Git repo, copy and paste a Git URL that [follows the conventions](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md)
 1. Profit
 
 ## Developing a Template Project
 
-See [CONVENTIONS.MD](https://github.com/appirio-digital/ads-baseline/blob/master/CONVENTIONS.md) for instructions on how to templatize your Git project.
+See [CONVENTIONS.MD](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md) for instructions on how to templatize your Git project.
