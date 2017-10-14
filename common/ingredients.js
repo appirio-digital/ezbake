@@ -32,6 +32,12 @@ module.exports = [
   },
   {
     type: 'input',
+    name: 'gitRepoBranch',
+    message: 'Please specify the branch that contains the .ezbake folder',
+    default: 'ezbake'
+  },
+  {
+    type: 'input',
     name: 'gitOriginURL',
     message: '(Optional) Please copy/paste the URL of the remote repo this template will be pushed to',
     default: null

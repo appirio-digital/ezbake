@@ -8,8 +8,29 @@ const recipeDir = path.join(ezbakeDir, './recipes');
 const { stageChanges } = require('./git');
 
 module.exports = {
+  menu,
   bakeRecipe
 };
+
+function menu(ui) {
+  const recipes = fs.readdirSync(recipeDir)
+    .map(fileOrDirName => {
+      let stats = fs.lstatSync(path.join(recipeDir, fileOrDirName));
+      if (stats.isFile()) {
+        return fileOrDirName.replace(/\.[^/.]+$/, "");
+      }
+      return fileOrDirName;
+    });
+
+  let output = recipes
+    .forEach(recipe => {
+      let recipeDefinition = require(path.join(recipeDir, recipe));
+      ui.log.write(`> ${recipe}: ${recipeDefinition.description || 'Recipe definition for ' + recipe}`);
+      ui.log.write(`  > Example: ezbake cook -r ${recipe}`);
+    });
+
+  return;
+}
 
 async function bakeRecipe(ui, name) {
   try {
@@ -20,7 +41,11 @@ async function bakeRecipe(ui, name) {
     console.log(recipeDir);
     let matchingRecipe = recipeDirContents
       .find(fileOrDirName => {
-        return fileOrDirName.replace(/\.[^/.]+$/, "") === name;
+        let stats = fs.lstatSync(path.join(recipeDir, fileOrDirName));
+        if (stats.isFile()) {
+          return fileOrDirName.replace(/\.[^/.]+$/, "") === name;
+        }
+        return fileOrDirName === name;
       });
     
     ui.log.write(`. Finding recipe for ${name} in ${recipeDir}...`);

@@ -13,8 +13,7 @@
 ## Source Git Repo Assumptions
 
 1. It is accessible from your machine, either via https or ssh links
-1. It has an `ezbake` branch
-1. The `ezbake` branch has been setup with `ezbake plug`
+1. It has an branch that has been initialized by `ezbake plug`
 
 ## `.ezbake` folder
 
@@ -114,7 +113,11 @@ You can then embed in your files the names of the question prompts.  For example
 
 ##### env
 
-The keys of the `env` is similar to `questions`. They are also [inquirer](https://www.npmjs.com/package/inquirer) prompts that then map to a corresponding .env file value.  For example, the above file would generate a `.env` file in the root of the generated project that looks like the following:
+The keys of `env` is similar to `questions`. They are also [inquirer](https://www.npmjs.com/package/inquirer) prompts that then map to a corresponding .env file value.  For example, the above file would generate a `.env` file in the root of the generated project that looks like the following:
+
+##### icing
+
+The keys of `icing` is an array of commands you want to execute after ezbake completes scaffolding your project. This could be anything, from plain bash commands to a reference to an executable script.
 
 ```
 JWT_SECRET=shhh_its_a_secret
@@ -148,3 +151,7 @@ A [JavaScript template literal string](https://developer.mozilla.org/en-US/docs/
 ##### ingredients
 
 The keys of the `ingredients` is where you would define the inputs from a user via [inquirer](https://www.npmjs.com/package/inquirer).  See the examples on the Inquirer documentation to see how to structure specific questions.  You have full control over the `inquirer` questions to ask, as well as validations, filters, etc.
+
+##### icing
+
+The keys of `icing` is an array of commands you want to execute after ezbake completes cooking the recipe. This could be anything, from plain bash commands to a reference to an executable script.

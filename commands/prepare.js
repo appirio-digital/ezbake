@@ -28,6 +28,10 @@ module.exports = {
         alias: 'gitRepoURL',
         describe: 'The URL of the source Git repo to ezbake'
       })
+      .option('b', {
+        alias: 'gitRepoBranch',
+        describe: 'The branch on the source repo which contains the .ezbake folder'
+      })
       .option('o', {
         alias: 'gitOriginURL',
         describe: 'The URL of the Git destination repo to push to as a remote origin'
@@ -52,7 +56,7 @@ module.exports = {
       projectIngredients.projectName = await checkForExistingFolder(ui, projectIngredients.projectName);
   
       // Check if the repo is valid
-      await cloneRepo(ui, projectIngredients.gitRepoURL, projectIngredients.projectName).catch(
+      await cloneRepo(ui, projectIngredients.gitRepoURL, projectIngredients.gitRepoBranch, projectIngredients.projectName).catch(
         invalidGitRepo
       );
       let recipe = readAndInitializeProjectRecipe(ui, projectIngredients.projectName, projectIngredients.gitRepoURL);

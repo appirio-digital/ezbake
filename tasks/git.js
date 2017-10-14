@@ -37,11 +37,11 @@ function stageChanges(ui, commitMessage) {
   );
 }
 
-function cloneRepo(ui, url, projectName) {
+function cloneRepo(ui, url, gitRepoBranch, projectName) {
   return new Promise((resolve, reject) => {
     // Assumption: Any source repos will have an ezbake branch that we can use
-    ui.log.write(`. Cloning ${url} to ./${projectName}\n`);
-    const clone = spawn('git', [`clone`, `-b`, `ezbake`, url, projectName]);
+    ui.log.write(`. Cloning ${url}#${gitRepoBranch} to ./${projectName}\n`);
+    const clone = spawn('git', [`clone`, `-b`, `${gitRepoBranch}`, url, projectName]);
     clone.on('data', data => {
       ui.updateBottomBar(data);
     });
