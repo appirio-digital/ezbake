@@ -1,23 +1,37 @@
 # ezbake Conventions
 
-## Introduction
+## Getting Started
 
-`ezbake` first prompts the user for four items:
+To quickly turn your Git repo into an ezbake project, simply execute `ezbake plug` at the root of the repo. This will drop a baseline `.ezbake` folder in your project, and you can begin templatizing your repo.
 
-1. A name for the project
+As a general suggestion, we'd recommend breaking off the ezbake version of your repo to a separate, long-standing branch.  This allows for two important aspects as you develop:  
+
+1. Continue work as normal on your base (presumably on `master`) without having to worry about your ezbake project
+1. Only merge in specific work from your base branch to the ezbake version
+
+By convention, if a user of your project does not specify a branch, `ezbake` will assume to clone your repo's `ezbake` branch.
+
+## Base Ingredients
+
+All `ezbake` projects will prompt the user for the following and will pass these values as part of the template string swaps:
+
+1. `projectName`: A name for the project
     * Spaces are replaced with dashes unless it's Docker-related, in which case spaces are replaced with underscores
-1. An author for the project
-1. A description for the project
-1. The URL of a Git repo to use as a baseline
+1. `projectAuthor`: An author for the project
+1. `projectDescription`: A description for the project
+1. `gitRepoURL`: The URL of a Git repo to use as a baseline
+1. `gitRepoBranch`: The branch of the Git repo which contains the `.ezbake` folder
+1. `gitOriginURL`: (Optional) The URL of the empty git repo to push the resulting project
 
-## Source Git Repo Assumptions
+A user may pass in the `gitRepoURL`, `gitRepoBranch`, and `gitOriginURL` via the `-r`, `-b`, and `-o` parameters of `ezbake prepare` respectively.
 
-1. It is accessible from your machine, either via https or ssh links
-1. It has an branch that has been initialized by `ezbake plug`
+## Distributing to Users
 
-## `.ezbake` folder
+`ezbake` has no central registry and assumes that you will grant proper access and information to a remote git repo that a user may reference when executing `ezbake prepare`.
 
-### index.js
+## `.ezbake` Folder Structure
+
+### .ezbake/index.js
 
 `index.js` is what drives the `ezbake` process. It defines several things for the utility.
 
