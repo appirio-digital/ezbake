@@ -94,7 +94,9 @@ async function bakeRecipe(ui, name) {
             .forEach(icing => {
               ui.log.write(`  . ${icing.description}`);
               let output = executeCommand(icing.cmd);
-              ui.log.write(`    . ${output}`);
+              if (output.toString()) {
+                ui.log.write(`    . ${output.toString()}`);
+              }
           });
           ui.log.write(`. Icing applied!`);
         }
