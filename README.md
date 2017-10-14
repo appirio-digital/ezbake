@@ -22,12 +22,6 @@ Here is a sample repo which is `ezbake` enabled: https://github.com/ericnograles
 
 `ezbake` requires [Node.js](https://nodejs.com) 8.6 or higher.
 
-## Suggested Setup
-
-1. [Node Version Manager](https://github.com/creationix/nvm)
-1. `nvm install 8.6.0`
-1. `nvm alias default 8.6.0`
-
 ## Installation
 
 `npm install -g https://github.com/appirio-digital/ezbake.git`
