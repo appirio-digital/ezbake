@@ -61,7 +61,7 @@ module.exports = {
       cmd: ['say', 'how much would could a woodchuck chuck if a woodchuck could chuck wood']
     },
     {
-      description: 'Says a tongue twister',
+      description: 'Warcraft is the best craft',
       cmd: ['echo', `job's done`]
     }
   ]
