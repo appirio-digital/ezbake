@@ -127,7 +127,7 @@ A [JavaScript template literal string](https://developer.mozilla.org/en-US/docs/
 
 The keys of the `ingredients` is where you would define the inputs from a user via [inquirer](https://www.npmjs.com/package/inquirer).  See the examples on the Inquirer documentation to see how to structure specific questions.  You have full control over the `inquirer` questions to ask, as well as validations, filters, etc.
 
-**Note**: At a minimum, you should provide a `fileName` object in `ingredients` to ask the user what the file name will be called when it is dropped in `destination`.
+**Note**: At a minimum, you should provide a `fileName` object in `ingredients` to ask the user what the file name will be called when it is dropped in `destination`. Otherwise, it is defaulted to the name of the recipe with no file extension.
 
 ##### icing
 
