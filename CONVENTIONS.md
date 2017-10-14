@@ -75,11 +75,11 @@ module.exports = {
   ],
   icing: [
     {
-      description: 'Says a tongue twister',
-      cmd: ['say', 'how much would could a woodchuck chuck if a woodchuck could chuck wood']
+      description: 'Says something on Mac',
+      cmd: ['./icing.sh']
     },
     {
-      description: 'Warcraft is the best craft',
+      description: 'Tells me the job is done',
       cmd: ['echo', `job's done`]
     }
   ]
@@ -111,6 +111,8 @@ JWT_SECRET=shhh_its_a_secret
 ##### icing
 
 The keys of `icing` is an array of commands you want to execute after ezbake completes scaffolding your project. This could be anything, from plain bash commands to a reference to an executable script.
+
+You may also execute local commands relative to the root of the project being cloned. For example, above, we packaged an `icing.sh` script at the root of the project and can invoke it directly.
 
 ### .ezbake/recipes
 
@@ -150,3 +152,5 @@ The keys of the `ingredients` is where you would define the inputs from a user v
 ##### icing
 
 The keys of `icing` is an array of commands you want to execute after ezbake completes cooking the recipe. This could be anything, from plain bash commands to a reference to an executable script.
+
+You may also execute local commands relative to the root of the project being cloned. For example, above, we packaged an `icing.sh` script at the root of the project and can invoke it directly.
