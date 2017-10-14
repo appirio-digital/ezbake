@@ -1,14 +1,20 @@
 const inquirer = require('inquirer');
 const fs = require('fs-extra');
 const path = require('path');
-const { spawn, exec } = require('child_process');
+const { spawn, execSync } = require('child_process');
 const cwd = path.resolve(process.cwd());
+const shellescape = require('shell-escape');
 
 module.exports = {
   createEnvFile,
   walkSync,
-  checkForExistingFolder
+  checkForExistingFolder,
+  executeCommand
 };
+
+function executeCommand(cmd) {
+  return execSync(shellescape(cmd), { timeout: 60000});
+}
 
 function createEnvFile(ui, projectName, answers) {
   const pathToEnvFile = path.join(cwd, `./${projectName}/.env`);

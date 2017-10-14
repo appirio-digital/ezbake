@@ -11,7 +11,8 @@ const {
 
 const {
   createEnvFile,
-  checkForExistingFolder
+  checkForExistingFolder,
+  executeCommand
 } = require('../tasks/filesystem');
 
 const {
@@ -59,7 +60,7 @@ module.exports = {
       await cloneRepo(ui, projectIngredients.gitRepoURL, projectIngredients.gitRepoBranch, projectIngredients.projectName).catch(
         invalidGitRepo
       );
-      let recipe = readAndInitializeProjectRecipe(ui, projectIngredients.projectName, projectIngredients.gitRepoURL);
+      let recipe = readAndInitializeProjectRecipe(ui, projectIngredients.projectName, projectIngredients.gitRepoURL, projectIngredients.gitRepoBranch);
   
       // Remove git bindings
       await deleteGitFolder(ui, projectIngredients.projectName);
@@ -87,6 +88,18 @@ module.exports = {
       if (projectIngredients.gitOriginURL) {
         await pushLocalGitToOrigin(ui, projectIngredients.gitOriginURL, projectIngredients.projectName);
       }
+
+      if (recipe.icing) {
+        ui.log.write(`. Applying icing...`);
+        recipe.icing
+          .forEach(async icing => {
+            ui.log.write(`  . ${icing.description}`);
+            let output = executeCommand(icing.cmd);
+            ui.log.write(`    . ${output}`);
+          });
+        ui.log.write(`. Icing applied!`);
+      }
+
       ui.log.write(`. Your project is ready!`)
       process.exit(0);
     } catch (error) {

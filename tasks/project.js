@@ -56,14 +56,17 @@ function sync(ui, args = {}) {
         throw new Error(`! No Git URL specified and ${pathToGitSource} not found.`);
       }
     
+      args.gitRepoBranch = args.gitRepoBranch || 'ezbake';
       if (!args.gitRepoURL) {
-        args.gitRepoURL = fs.readFileSync(pathToGitSource, {encoding: 'utf8'}).toString();
-        console.log(args.gitRepoURL);
+        let repoFull = fs.readFileSync(pathToGitSource, {encoding: 'utf8'}).toString();
+        let repoParts = repoFull.split('#');
+        args.gitRepoURL = repoParts[0];
+        args.gitRepoBranch = repoParts[1];
       } else {
         ui.log.write(`> Manual override, cloning from ${args.gitRepoURL}`);
       }
     
-      await cloneRepo(ui, args.gitRepoURL, tempFolderName).catch(error => {
+      await cloneRepo(ui, args.gitRepoURL, `ezbake`, tempFolderName).catch(error => {
         throw new Error(`! Could not clone source repo. Please try again. ${error.message}`);
       });
     
@@ -76,7 +79,7 @@ function sync(ui, args = {}) {
         }
         ui.log.write(`. Successfully synced in ezbake from ${pathToUpdatedEzBake}`);
         ui.log.write(`. Updating .gitsource to ${args.gitRepoURL}`);
-        fs.writeFileSync(path.join(pathToEzBake, '/.gitsource'), args.gitRepoURL, { encoding: 'utf-8'});
+        fs.writeFileSync(path.join(pathToEzBake, '/.gitsource'), `${args.gitRepoURL}#${args.gitRepoBranch}`, { encoding: 'utf-8'});
         ui.log.write(`. Finished updating .gitsource to ${args.gitRepoURL}`);
         rimraf.sync(path.join(cwd, `/${tempFolderName}`));
         ui.log.write(`. Removed ${pathToUpdatedEzBake}`);
@@ -100,13 +103,13 @@ function isValidFile(file, validFiles) {
   return fileMatches && !ignoreMatches;
 }
 
-function readAndInitializeProjectRecipe(ui, projectName, gitRepoURL) {
+function readAndInitializeProjectRecipe(ui, projectName, gitRepoURL, gitRepoBranch) {
   const pathToRecipe = path.join(cwd, `./${projectName}/.ezbake`);
   ui.log.write(`. Reading ${pathToRecipe}...\n`);
 
   // Create a .gitsource file with the original gitRepoURL specified for sync support
   ui.log.write(`. Writing .gitsource to .ezbake project`);
-  fs.writeFileSync(path.join(pathToRecipe, '/.gitsource'), gitRepoURL, { encoding: 'utf-8'});
+  fs.writeFileSync(path.join(pathToRecipe, '/.gitsource'), `${gitRepoURL}#${gitRepoBranch}`, { encoding: 'utf-8'});
   ui.log.write(`. Finished writing .gitsource to .ezbake project`);
   return require(pathToRecipe);
 }
