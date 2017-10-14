@@ -44,7 +44,7 @@ n/a
 
 #### Sample
 
-`ezbake unplug`
+`ezbake plug`
 
 ### ezbake unplug
 
