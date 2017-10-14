@@ -122,13 +122,13 @@ JWT_SECRET=shhh_its_a_secret
 
 ### recipes
 
-`ezbake` as of v2.0.0 introduces a concept called `recipes`. In short, these are configurable generators for any type of file you wish to create.
+Recipes are configurable generators for any type of file you wish to create.  They are invoked by the `ezbake cook` command.  For example `ezbake cook -r Query` will look for a `Query.js` under `.ezbake/recipes`, prompts the user with the `ingredients` listed, and write out the `source` specified.
 
-To see an example: https://github.com/ericnograles/ads-baseline-madlibs/tree/ezbake
+#### Example
 
-#### Usage
-
-In the root of a project with an `.ezbake` directory, execute `ezbake --recipe=RecipeName`
+1. Execute `ezbake prepare -r https://github.com/ericnograles/ads-baseline-madlibs.git`
+1. `cd` into the directory you specified
+1. Execute `ezbake cook -r Query`
 
 #### Conventions
 
