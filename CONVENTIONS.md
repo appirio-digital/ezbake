@@ -111,6 +111,10 @@ Recipes are configurable generators for any type of file you wish to create.  Th
 
 #### Recipe Definitions
 
+##### description
+
+The description to be listed when a user executes `ezbake menu`.
+
 ##### destination
 
 The destination directory on which the created file will live. This is in relation to the root of a project that was scaffolded by `.ezbake`
@@ -122,6 +126,8 @@ A [JavaScript template literal string](https://developer.mozilla.org/en-US/docs/
 ##### ingredients
 
 The keys of the `ingredients` is where you would define the inputs from a user via [inquirer](https://www.npmjs.com/package/inquirer).  See the examples on the Inquirer documentation to see how to structure specific questions.  You have full control over the `inquirer` questions to ask, as well as validations, filters, etc.
+
+**Note**: At a minimum, you should provide a `fileName` object in `ingredients` to ask the user what the file name will be called when it is dropped in `destination`.
 
 ##### icing
 
