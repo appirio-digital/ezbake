@@ -20,6 +20,10 @@ Here is a sample repo which is `ezbake` enabled: https://github.com/ericnograles
 
 ## Prerequisites
 
+`ezbake` requires [Node.js](https://nodejs.com) 8.6 or higher.
+
+## Suggested Setup
+
 1. [Node Version Manager](https://github.com/creationix/nvm)
 1. `nvm install 8.6.0`
 1. `nvm alias default 8.6.0`
@@ -44,6 +48,10 @@ This command is intended to add `ezbake` support to a project. This will create 
 
 n/a
 
+#### Sample
+
+`ezbake unplug`
+
 ### ezbake unplug
 
 #### Description
@@ -53,6 +61,10 @@ This command will remove the `.ezbake` folder from a project that is using it.
 #### Options
 
 n/a
+
+#### Sample
+
+`ezbake unplug`
 
 ### ezbake prepare [options]
 
@@ -88,6 +100,22 @@ Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/ma
 #### Sample
 
 `ezbake cook -r Query`
+
+### ezbake menu
+
+#### Description
+
+This command lists the available recipes in an existing `ezbake` project.
+
+Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/master/CONVENTIONS.md) for more details.
+
+#### Options
+
+n/a
+
+#### Sample
+
+`ezbake menu`
 
 ### ezbake sync [options]
 

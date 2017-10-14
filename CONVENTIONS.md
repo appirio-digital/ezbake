@@ -26,72 +26,43 @@
 ```js
 module.exports = {
   source: { 
-    '**/*.js': true,
-    '**/*.json': true,
-    '**/*.java': true,
-    '**/*.yml': true,
-    '**/*.sh': true,
-    '**/.vscode/*.json': true,
-    '**/Dockerfile': true
+    "**/*.txt": true,
+    "**/*.sql": true,
+    "**/*.yml": true,
+    "**/ignore_me.sql": false,
+    "**/data/ignore_this_entire_folder/**": false,
+    "**/*.sh": true
   },
   ingredients: [
     {
-      type: 'input',
-      name: 'localPortPostgres',
-      message: 'Please specify the local port on which to expose the Postgres instance from Docker',
-      default: '60000',
-      validate: function (value) {
-        let valid = !isNaN(parseFloat(value));
-        return valid || 'Please enter a number';
-      },
+      "type": "input",
+      "name": "favoriteFood",
+      "message": "What is your favorite food?",
+      "default": "Steak"
     },
     {
-      type: 'input',
-      name: 'localPortRedis',
-      message: 'Please specify the local port on which to expose the Redis instance from Docker',
-      default: '60001',
-      validate: function (value) {
-        let valid = !isNaN(parseFloat(value));
-        return valid || 'Please enter a number';
-      },
-    },
-    {
-      type: 'input',
-      name: 'localPortWebApp',
-      message: 'Please specify the local port on which to expose the WebApp from Docker',
-      default: '60002',
-      validate: function (value) {
-        let valid = !isNaN(parseFloat(value));
-        return valid || 'Please enter a number';
-      },
-    },
-    {
-      type: 'input',
-      name: 'localPortNodeDebugger',
-      message: 'Please specify the local port on which to expose the Redis instance from Docker',
-      default: '60003',
-      validate: function (value) {
-        let valid = !isNaN(parseFloat(value));
-        return valid || 'Please enter a number';
-      },
-    },
-    {
-      type: 'input',
-      name: 'localPortSwaggerEditor',
-      message: 'Please specify the local port on which to expose the Swagger Editor from Docker',
-      default: '60004',
-      validate: function (value) {
-        let valid = !isNaN(parseFloat(value));
-        return valid || 'Please enter a number';
-      },
+      "type": "input",
+      "name": "favoriteSnack",
+      "message": "What is your favorite snack?",
+      "default": "Nutella"
     }
   ],
-  env: [
+  "env": [
     {
-      type: 'input',
-      name: 'JWT_SECRET',
-      message: 'Please specify a value for the JWT_SECRET environment variable. This is how we will sign JSON Web Tokens.',
-      default: 'shhh_its_a_secret',
+      "type": "input",
+      "name": "SOME_SECRET",
+      "message": "Please specify a value for SOME_SECRET for the .env file",
+      "default": "its_def_a_secret"
+    }
+  ],
+  icing: [
+    {
+      description: 'Says a tongue twister',
+      cmd: ['say', '"how much would could a woodchuck chuck if a woodchuck could chuck wood"']
+    },
+    {
+      description: 'Says a tongue twister',
+      cmd: ['echo', `"job's done"`]
     }
   ]
 }
@@ -115,13 +86,13 @@ You can then embed in your files the names of the question prompts.  For example
 
 The keys of `env` is similar to `questions`. They are also [inquirer](https://www.npmjs.com/package/inquirer) prompts that then map to a corresponding .env file value.  For example, the above file would generate a `.env` file in the root of the generated project that looks like the following:
 
-##### icing
-
-The keys of `icing` is an array of commands you want to execute after ezbake completes scaffolding your project. This could be anything, from plain bash commands to a reference to an executable script.
-
 ```
 JWT_SECRET=shhh_its_a_secret
 ```
+
+##### icing
+
+The keys of `icing` is an array of commands you want to execute after ezbake completes scaffolding your project. This could be anything, from plain bash commands to a reference to an executable script.
 
 ### recipes
 
