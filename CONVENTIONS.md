@@ -126,8 +126,8 @@ Recipes are configurable generators for any type of file you wish to create.  Th
 
 #### Conventions
 
-1. One file = one recipe
-2. RecipeName = `.ezbake/recipes/<RecipeName>.js`
+1. One file/directory = one recipe
+2. RecipeName = `.ezbake/recipes/<RecipeName>.js` or `.ezbake/recipes/RecipeName/`
 
 #### Recipe Definitions
 
