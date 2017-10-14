@@ -18,5 +18,12 @@
   },
   "bin": {
     "ezbake": "./index.js"
+  },
+  "scripts": {
+    "debug:prepare": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js prepare",
+    "debug:sync": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js sync",
+    "debug:plug": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js plug",
+    "debug:unplug": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js unplug",
+    "debug:cook": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js cook -r Query"
   }
 }
