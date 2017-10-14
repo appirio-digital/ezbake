@@ -20,7 +20,7 @@ module.exports = {
       ui.log.write(`! You must specify a recipe to cook`);
       process.exit(1);
     }
-    await bakeRecipe(ui, args)
+    await bakeRecipe(ui, args.recipe)
       .catch(handle);
     process.exit(0);
   }

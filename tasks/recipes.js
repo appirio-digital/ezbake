@@ -40,9 +40,28 @@ async function bakeRecipe(ui, name) {
       if (!fs.existsSync(destination)) {
         fs.mkdirSync(destination);
       }
-      fs.writeFileSync(fileName, bake(ingredients), { encoding: 'utf-8'});
-      ui.log.write(`. Successfully cooked ${name}!`);
-      await stageChanges(ui, `ezbake - ${fileName}`);
+      
+      let answers = {
+        overwriteExistingFile: true
+      };
+      if (fs.existsSync(fileName)) {
+        answers = await inquirer.prompt([
+          {
+            type: 'confirm',
+            name: 'overwriteExistingFile',
+            message: `${fileName} exists. Would you like to continue and overwrite this file`,
+            default: true
+          }
+        ])
+      }
+
+      if (answers.overwriteExistingFile) {
+        fs.writeFileSync(fileName, bake(ingredients), { encoding: 'utf-8'});
+        ui.log.write(`. Successfully cooked ${name}!`);
+        await stageChanges(ui, `[ezbake] - baked ${fileName}`);
+        process.exit(0);
+      }
+
       process.exit(0);
     }
   
