@@ -94,7 +94,7 @@ JWT_SECRET=shhh_its_a_secret
 
 The keys of `icing` is an array of commands you want to execute after ezbake completes scaffolding your project. This could be anything, from plain bash commands to a reference to an executable script.
 
-### recipes
+### .ezbake/recipes
 
 Recipes are configurable generators for any type of file you wish to create.  They are invoked by the `ezbake cook` command.  For example `ezbake cook -r Query` will look for a `Query.js` under `.ezbake/recipes`, prompts the user with the `ingredients` listed, and write out the `source` specified.
 
