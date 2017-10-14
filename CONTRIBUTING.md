@@ -7,7 +7,7 @@ Thanks for wanting to contribute! We welcome the community's feedback and want t
 `ezbake` was built with the following goals:
 
 1. It should be a "higher order utility" for an author and not force the author to adhere to a specific folder structure
-1. It should always be loosely coupled from a project, technology, and platform. "There if you need it, but not essential to get work done, and easily removed with no drama".
+1. It should always be loosely coupled from a project, technology, and platform (apart from needing Node.js to run, of course). "There if you need it, but not essential to get work done, and easily removed with no drama".
 1. It should be as easy for a Node.js developer as it might be for, say, an ML developer, a data scientist, or a Python developer.
 
 ## Pull Requests
