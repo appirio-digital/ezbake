@@ -79,7 +79,7 @@ function establishLocalGitBindings(ui, projectName) {
     const pathToProject = path.join(cwd, `./${projectName}`);
     ui.log.write(`. Establishing new local .git bindings...\n`);
     exec(
-      `cd ${pathToProject} && git init && git add . && git commit -m "get it while it's hot!"`,
+      `cd ${pathToProject} && git init && git add . && git commit -m "[ezbake] - get it while it's hot!"`,
       (err, stdout, stderr) => {
         if (err || stderr) {
           return reject(
