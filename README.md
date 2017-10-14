@@ -1,8 +1,4 @@
-<img src="https://otviiisgrrr8.files.wordpress.com/2013/12/ez-bake.png" width="150">
-
-# ezbake
-
-**"The Scaffolder for Everyone"**
+![logo](https://github.com/appirio-digital/ezbake/blob/master/ezbake-logo.png)
 
 ## The Problem
 
