@@ -20,7 +20,8 @@ Here is a sample repo which is `ezbake` enabled: https://github.com/ericnograles
 
 ## Prerequisites
 
-`ezbake` requires [Node.js](https://nodejs.org) 8.6 or higher.
+* [Node.js](https://nodejs.org) 8.6 or higher
+* [`git`](https://git-scm.com/) installed locally and on your command line's PATH
 
 ## Installation
 
