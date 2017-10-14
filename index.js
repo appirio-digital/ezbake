@@ -6,7 +6,7 @@ const yargs = require('yargs');
 // Only watch for <%= %> swaps, lodash template swaps ES6 templates by default
 _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
 
-console.log(require('./logo'));
+console.log(require('./common').logo);
 
 // Understood commands
 const args = yargs

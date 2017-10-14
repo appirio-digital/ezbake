@@ -1,11 +1,15 @@
 const inquirer = require('inquirer');
 const ui = new inquirer.ui.BottomBar();
+const ingredients = require('./ingredients');
+const logo = require('./logo');
 
 module.exports = {
   sanitizeArgs,
   ui,
   handle,
-  invalidGitRepo
+  invalidGitRepo,
+  ingredients,
+  logo
 };
 
 function sanitizeArgs(argv) {

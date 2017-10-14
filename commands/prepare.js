@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const yargs = require('yargs');
-const { sanitizeArgs, ui, invalidGitRepo } = require('../common');
+const { sanitizeArgs, ui, invalidGitRepo, ingredients } = require('../common');
 
 const {
   cloneRepo,
@@ -35,9 +35,8 @@ module.exports = {
   },
   handler: async (argv) => {
     let args = sanitizeArgs(argv);
+    let baseIngredients = ingredients;
     try {
-      let baseIngredients = require('../ingredients');
-  
       // Mise en place
       baseIngredients = baseIngredients
         .filter(ingredient => {
