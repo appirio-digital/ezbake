@@ -1,3 +1,4 @@
+const path = require('path');
 const inquirer = require('inquirer');
 const yargs = require('yargs');
 const { sanitizeArgs, ui, invalidGitRepo, ingredients } = require('../common');
@@ -91,6 +92,8 @@ module.exports = {
 
       if (recipe.icing) {
         ui.log.write(`. Applying icing...`);
+        let projectDir = path.join(process.cwd(), `./${projectIngredients.projectName}`);
+        process.chdir(projectDir);
         recipe.icing
           .forEach(async icing => {
             ui.log.write(`  . ${icing.description}`);
