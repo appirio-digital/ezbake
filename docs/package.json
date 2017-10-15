@@ -29,6 +29,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "develop": "./node_modules/.bin/gatsby develop",
     "build": "./node_modules/.bin/gatsby build",
-    "deploy": "./node_modules/.bin/gatsby build --prefix-links && gh-pages -d public"
+    "deploy": "./node_modules/.bin/gatsby build --prefix-links && ./node_modules/.bin/gh-pages -d public"
   }
 }
