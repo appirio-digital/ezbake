@@ -29,6 +29,6 @@ function handle(error) {
 
 function invalidGitRepo(error) {
   throw new Error(
-    `! This is not a valid ads-baseline. Please see the conventions here: https://github.com/appirio-digital/ads-baseline/blob/master/CONVENTIONS.md\n  ! ${error.message}`
+    `! This is not a valid ezbake project. Please see the conventions here: https://appirio-digital.github.io/ezbake/docs/\n  ! ${error.message}`
   );
 }
