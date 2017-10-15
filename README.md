@@ -123,7 +123,7 @@ n/a
 
 This command allows a user to resynchronize their `.ezbake` folder with the latest published by the author.
 
-As an escape hatch, a user can also manually specify another Git source from which to pull the syncing operation.
+As an escape hatch, a user can also manually specify another Git source and branch from which to pull the syncing operation.
 
 **Note**: This is a destructive action and will remove your project's recipes and replace them with whatever recipes are defined from the Git repo you specify at the time of execution.
 
@@ -132,7 +132,7 @@ As an escape hatch, a user can also manually specify another Git source from whi
 **Note**: You will be prompted for these if you don't pass them in as arguments
 
 * `-r`: (Optional) The full URL of a Git repo to use a source.
-* `-b`: The branch to clone from the Git repo source
+* `-b`: (Optional) Only to be used in addition to the `-r` branch, the branch to clone from the Git repo source
 
 #### Sample
 
