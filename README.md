@@ -12,7 +12,7 @@ Have your cake and it eat it too with `ezbake`.
 
 ## Demo
 
-![demo](https://github.com/appirio-digital/ezbake/blob/master/ezbake-demo.gif)
+![demo](https://media.giphy.com/media/3ohhwrGbj9SD6kT1eg/giphy.gif)
 
 ## Documentation
 
