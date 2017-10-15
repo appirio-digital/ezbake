@@ -25,6 +25,6 @@ Execute `ezbake --help` to see the list of valid commands.
 
 You may also execute `ezbake <command> --help` to see the list of options per command.
 
-## Sample
+## Quickstart
 
-`ezbake sync -r https://github.com/ericnograles/ads-baseline-madlibs.git`
+`ezbake prepare -r https://github.com/ericnograles/ads-baseline-madlibs.git -b ezbake`
