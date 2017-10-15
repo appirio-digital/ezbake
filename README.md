@@ -73,12 +73,15 @@ Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/ma
 
 #### Options
 
-* `-r`: The full URL of the Git repo to use a source. This Git repo should have an `ezbake` branch which has been initialized with `ezbake init` by the author.
-* `-o`: The full URL of the Git repo to use as the origin for the created ezbake scaffold. It should be a completely empty repository.
+**Note**: You will be prompted for these if you don't pass them in as arguments
+
+* `-r`: The full URL of the Git repo to use a source
+* `-b`: The branch to clone from the Git repo source
+* `-o`: The full URL of the Git repo to use as the origin for the created ezbake scaffold. It should be a completely empty repository
 
 #### Sample
 
-`ezbake prepare -r https://github.com/ericnograles/ads-baseline-madlibs.git`
+`ezbake prepare -r https://github.com/ericnograles/ads-baseline-madlibs.git -b ezbake-branch`
 
 ### ezbake cook [options]
 
@@ -126,7 +129,10 @@ As an escape hatch, a user can also manually specify another Git source from whi
 
 #### Options
 
-* `-r`: (Optional) The full URL of a Git repo to use a source. This Git repo should have an `ezbake` branch which has been initialized with `ezbake init` by the author.
+**Note**: You will be prompted for these if you don't pass them in as arguments
+
+* `-r`: (Optional) The full URL of a Git repo to use a source.
+* `-b`: The branch to clone from the Git repo source
 
 #### Sample
 
