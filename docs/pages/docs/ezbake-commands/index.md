@@ -6,6 +6,8 @@ Execute `ezbake --help` to see the list of valid commands.
 
 You may also execute `ezbake <command> --help` to see the list of options per command.
 
+All of these commands are to be executed at the root of a project.
+
 # ezbake plug
 
 ## Description
@@ -52,22 +54,6 @@ This command is intended to scaffold a project from a given Git URL source.  If 
 
 `ezbake prepare -r https://github.com/ericnograles/ads-baseline-madlibs.git -b ezbake-branch`
 
-# ezbake cook [options]
-
-## Description
-
-This command is to be used within a project that has been created using `ezbake prepare`.  This is the command which will cook a recipe for the user.  Authors should specify the available Recipes in their project's README.md.
-
-Optionally, you may look in the project's `.ezbake/recipes` folder to see what is available.
-
-## Options
-
-* `-r`: The name of the recipe to cook. These are the recipes defined in the `.ezbake/recipes` folder.
-
-## Sample
-
-`ezbake cook -r Query`
-
 # ezbake menu
 
 ## Description
@@ -81,6 +67,20 @@ n/a
 ## Sample
 
 `ezbake menu`
+
+# ezbake cook [options]
+
+## Description
+
+This command is to be used within a project that has been created using `ezbake prepare`.  This is the command which will cook a recipe for the user. Recipes are defined under `.ezbakes/recipes` or can be seen with `ezbake menu`.
+
+## Options
+
+* `-r`: The name of the recipe to cook. These are the recipes defined in the `.ezbake/recipes` folder.
+
+## Sample
+
+`ezbake cook -r Query`
 
 # ezbake sync [options]
 
