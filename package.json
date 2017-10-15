@@ -6,7 +6,6 @@
   "repository": "https://github.com/appirio-digital/ezbake.git",
   "author": "Eric Nograles <enograles@appirio.com>",
   "license": "MIT",
-  "private": true,
   "dependencies": {
     "fs-extra": "^4.0.2",
     "inquirer": "^3.3.0",
