@@ -9,7 +9,7 @@ title: Getting Started
 
 # Installation
 
-`npm install -g https://github.com/appirio-digital/ezbake.git`
+`npm i -g @appirio/ezbake`
 
 # Usage
 

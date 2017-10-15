@@ -6,7 +6,7 @@ title: Distribute to Developers
 
 Have your developers execute the following command:
 
-`npm install -g https://github.com/appirio-digital/ezbake.git`
+`npm i -g @appirio/ezbake`
 
 # Using ezbake Projects
 

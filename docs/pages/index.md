@@ -17,7 +17,7 @@ Have your cake and it eat it too with `ezbake`.
 
 ## Installation
 
-`npm install -g https://github.com/appirio-digital/ezbake.git`
+`npm i -g @appirio/ezbake`
 
 ## Usage
 
