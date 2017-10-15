@@ -1,5 +1,5 @@
 siteTitle="ezbake"
-baseColor = "#67798f"
+baseColor = "#7496c2"
 linkPrefix = "/ezbake"
 docPages = [
   "/docs/",
