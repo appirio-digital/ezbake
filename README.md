@@ -1,4 +1,4 @@
-![logo](https://github.com/appirio-digital/ezbake/blob/master/ezbake-logo.png)
+![logo](https://image.ibb.co/cVsukm/ezbake_logo.png)
 
 # The Problem
 
