@@ -10,10 +10,6 @@ No more! `ezbake` is the utility that works _for_ the project author and not vic
 
 Have your cake and it eat it too with `ezbake`.
 
-## Demo
-
-![demo](https://media.giphy.com/media/3ohhwrGbj9SD6kT1eg/giphy.gif)
-
 ## Documentation
 
 Please see [our documentation site](https://appirio-digital.github.io/ezbake/) for information on how to create and consume ezbake projects
