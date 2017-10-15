@@ -1,6 +1,6 @@
 ![logo](https://github.com/appirio-digital/ezbake/blob/master/ezbake-logo.png)
 
-## The Problem
+# The Problem
 
 Many smart developers want to turn their projects into boilerplates or reusable scaffolds for other developers to use.  
 
@@ -10,6 +10,12 @@ No more! `ezbake` is the utility that works _for_ the project author and not vic
 
 Have your cake and it eat it too with `ezbake`.
 
-## Documentation
+# Demo
+
+Imagine being able to create a killer boilerplate and having another developer start a new project from scratch as quickly as this:
+
+![demo](https://media.giphy.com/media/3ov9jYm56sAXmT4aPK/giphy.gif)
+
+# Documentation
 
 Please see [our documentation site](https://appirio-digital.github.io/ezbake/) for information on how to create and consume ezbake projects
