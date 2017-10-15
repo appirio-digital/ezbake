@@ -1,0 +1,11 @@
+siteTitle="ezbake"
+baseColor = "#67798f"
+linkPrefix = "/ezbake"
+docPages = [
+  "/docs/",
+  "/docs/getting-started/",
+  "/docs/ezbake-commands/",
+  "/docs/ezbake-a-project/",
+  "/docs/setup-ezbake-folder/",
+  "/docs/distribute-to-developers/"
+]
