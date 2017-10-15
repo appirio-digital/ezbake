@@ -18,7 +18,7 @@ Imagine being able to create a killer boilerplate and having another developer s
 
 Or, maybe, you have a project that has a bit of boilerplate that you want to automate:
 
-![demo of recipes](https://media.giphy.com/media/3ohhwMOSeacMkrnHIQ/giphy.gif)
+![demo of recipes](https://media.giphy.com/media/xT9IgH5vl6mMc9AbN6/giphy.gif)
 
 All without intruding upon your base project's structure, working with you and getting out of the way when you need it to.
 
