@@ -2,14 +2,13 @@
 
 ## Getting Started
 
-To quickly turn your Git repo into an ezbake project, simply execute `ezbake plug` at the root of the repo. This will drop a baseline `.ezbake` folder in your project, and you can begin templatizing your repo.
-
-As a general suggestion, we'd recommend breaking off the ezbake version of your repo to a separate, long-standing branch.  This allows for two important aspects as you develop:  
-
-1. Continue work as normal on your base (presumably on `master`) without having to worry about your ezbake project
-1. Only merge in specific work from your base branch to the ezbake version
-
-By convention, if a user of your project does not specify a branch, `ezbake` will assume to clone your repo's `ezbake` branch.
+1. `npm install -g https://github.com/appirio-digital/ezbake.git`
+1. Clone a project you would like to ezbake
+1. `cd` into the project and execute `git checkout -b ezbake` (or whatever branch name you wish)
+1. `ezbake plug`
+1. Develop your scaffold and recipes in the `.ezbake` folder
+1. Push the `ezbake` (or whatever branch you named it) to your origin
+1. Distribute the git URL and branch name to your developers
 
 ## Base Ingredients
 
@@ -24,14 +23,6 @@ All `ezbake` projects will prompt the user for the following and will pass these
 1. `gitOriginURL`: (Optional) The URL of the empty git repo to push the resulting project
 
 A user may pass in the `gitRepoURL`, `gitRepoBranch`, and `gitOriginURL` via the `-r`, `-b`, and `-o` parameters of `ezbake prepare` respectively.
-
-## Distributing to Users
-
-`ezbake` has no central registry and assumes that you will grant proper access and information to a remote git repo that a user may reference when executing `ezbake prepare`.
-
-Please remember to provide not only the git repo's URL, but also, the branch on which your ezbake project lives. Generally, users will consume your project with the following command:
-
-`ezbake prepare -r https://some.git.platform.com/some_repo.git -b ezbake`
 
 ## `.ezbake` Folder Structure
 
@@ -154,3 +145,11 @@ The keys of the `ingredients` is where you would define the inputs from a user v
 The keys of `icing` is an array of commands you want to execute after ezbake completes cooking the recipe. This could be anything, from plain bash commands to a reference to an executable script.
 
 You may also execute local commands relative to the root of the project being cloned. For example, above, we packaged an `icing.sh` script at the root of the project and can invoke it directly.
+
+## Distributing to Developers
+
+`ezbake` has no central registry and assumes that you will grant proper access and information to a remote git repo that a user may reference when executing `ezbake prepare`.
+
+Please remember to provide not only the git repo's URL, but also, the branch on which your ezbake project lives. Generally, users will consume your project with the following command:
+
+`ezbake prepare -r https://some.git.platform.com/some_repo.git -b ezbake`

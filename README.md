@@ -73,12 +73,15 @@ Authors: See our [conventions](https://github.com/appirio-digital/ezbake/blob/ma
 
 #### Options
 
-* `-r`: The full URL of the Git repo to use a source. This Git repo should have an `ezbake` branch which has been initialized with `ezbake init` by the author.
-* `-o`: The full URL of the Git repo to use as the origin for the created ezbake scaffold. It should be a completely empty repository.
+**Note**: You will be prompted for these if you don't pass them in as arguments
+
+* `-r`: The full URL of the Git repo to use a source
+* `-b`: The branch to clone from the Git repo source
+* `-o`: The full URL of the Git repo to use as the origin for the created ezbake scaffold. It should be a completely empty repository
 
 #### Sample
 
-`ezbake prepare -r https://github.com/ericnograles/ads-baseline-madlibs.git`
+`ezbake prepare -r https://github.com/ericnograles/ads-baseline-madlibs.git -b ezbake-branch`
 
 ### ezbake cook [options]
 
@@ -120,13 +123,16 @@ n/a
 
 This command allows a user to resynchronize their `.ezbake` folder with the latest published by the author.
 
-As an escape hatch, a user can also manually specify another Git source from which to pull the syncing operation.
+As an escape hatch, a user can also manually specify another Git source and branch from which to pull the syncing operation.
 
 **Note**: This is a destructive action and will remove your project's recipes and replace them with whatever recipes are defined from the Git repo you specify at the time of execution.
 
 #### Options
 
-* `-r`: (Optional) The full URL of a Git repo to use a source. This Git repo should have an `ezbake` branch which has been initialized with `ezbake init` by the author.
+**Note**: You will be prompted for these if you don't pass them in as arguments
+
+* `-r`: (Optional) The full URL of a Git repo to use a source.
+* `-b`: (Optional) Only to be used in addition to the `-r` branch, the branch to clone from the Git repo source
 
 #### Sample
 
