@@ -4,6 +4,7 @@ linkPrefix = "/ezbake"
 docPages = [
   "/docs/",
   "/docs/getting-started/",
+  "/docs/how-ezbake-works/",
   "/docs/ezbake-commands/",
   "/docs/ezbake-a-project/",
   "/docs/setup-ezbake-folder/",
