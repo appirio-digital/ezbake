@@ -7,6 +7,8 @@
 1. `cd` into the project and execute `git checkout -b ezbake` (or whatever branch name you wish)
 1. `ezbake plug`
 1. Develop your scaffold and recipes in the `.ezbake` folder
+1. Push the `ezbake` (or whatever branch you named it) to your origin
+1. Distribute the git URL and branch name to your developers
 
 ## Base Ingredients
 
@@ -144,7 +146,7 @@ The keys of `icing` is an array of commands you want to execute after ezbake com
 
 You may also execute local commands relative to the root of the project being cloned. For example, above, we packaged an `icing.sh` script at the root of the project and can invoke it directly.
 
-## Distributing to Users
+## Distributing to Developers
 
 `ezbake` has no central registry and assumes that you will grant proper access and information to a remote git repo that a user may reference when executing `ezbake prepare`.
 
