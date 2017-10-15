@@ -7,5 +7,6 @@ docPages = [
   "/docs/ezbake-commands/",
   "/docs/ezbake-a-project/",
   "/docs/setup-ezbake-folder/",
-  "/docs/distribute-to-developers/"
+  "/docs/distribute-to-developers/",
+  "/docs/examples/"
 ]
