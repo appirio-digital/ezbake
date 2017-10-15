@@ -10,7 +10,7 @@ import typography from 'utils/typography'
 const { rhythm } = typography
 
 class Template extends Component {
-  handleTopicChange (e) {
+  handleTopicChange =  e => {
     return this.context.router.push(e.target.value)
   }
   render () {

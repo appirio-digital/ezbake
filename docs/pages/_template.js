@@ -57,7 +57,7 @@ class Template extends Component {
                     fontSize: adjustFontSizeTo('25.5px').fontSize,
                   }}
                 >
-                  <img src={logo} height={30} />
+                  <img src={logo} style={{maxHeight: 30}} />
                 </Link>
               </Span>
               <Span columns={8} last>
@@ -72,23 +72,7 @@ class Template extends Component {
                 >
                   Github
                 </a>
-                <Link
-                  to={prefixLink('/examples/')}
-                  style={{
-                    background: examplesActive ? activeColors.bg : colors.bg,
-                    color: examplesActive ? activeColors.fg : colors.fg,
-                    float: 'right',
-                    textDecoration: 'none',
-                    paddingLeft: rhythm(1/2),
-                    paddingRight: rhythm(1/2),
-                    paddingBottom: rhythm(3/4),
-                    marginBottom: rhythm(-1),
-                    paddingTop: rhythm(1),
-                    marginTop: rhythm(-1),
-                  }}
-                >
-                  Examples
-                </Link>
+               
                 <Link
                   to={prefixLink('/docs/')}
                   style={{
