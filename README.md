@@ -14,7 +14,13 @@ Have your cake and it eat it too with `ezbake`.
 
 Imagine being able to create a killer boilerplate and having another developer start a new project from scratch as quickly as this:
 
-![demo](https://media.giphy.com/media/3ov9jYm56sAXmT4aPK/giphy.gif)
+![demo of scaffold](https://media.giphy.com/media/3ov9jYm56sAXmT4aPK/giphy.gif)
+
+Or, maybe, you have a project that has a bit of boilerplate that you want to automate:
+
+![demo of recipes](https://media.giphy.com/media/3ohhwMOSeacMkrnHIQ/giphy.gif)
+
+All without intruding upon your base project's structure, working with you and getting out of the way when you need it to.
 
 # Documentation
 
