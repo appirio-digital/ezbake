@@ -12,36 +12,38 @@ module.exports = {
 };
 
 function stageChanges(ui, commitMessage) {
-  return new Promise(
-    (resolve, reject) => {
-      ui.log.write(
-        `. Staging git changes with commit message "${commitMessage}". \n`
-      );
-      exec(
-        `git add . && git commit -m "${commitMessage}"`,
-        (err, stdout, stderr) => {
-          if (err || stderr) {
-            return reject(
-              new Error(
-                `! Could not stage your git changes. Are you in a valid git repository?`
-              )
-            );
-          }
-          ui.log.write(
-            `. Finished staging changes. \n`
+  return new Promise((resolve, reject) => {
+    ui.log.write(
+      `. Staging git changes with commit message "${commitMessage}". \n`
+    );
+    exec(
+      `git add . && git commit -m "${commitMessage}"`,
+      (err, stdout, stderr) => {
+        if (err || stderr) {
+          return reject(
+            new Error(
+              `! Could not stage your git changes. Are you in a valid git repository?`
+            )
           );
-          return resolve();
         }
-      );
-    }
-  );
+        ui.log.write(`. Finished staging changes. \n`);
+        return resolve();
+      }
+    );
+  });
 }
 
 function cloneRepo(ui, url, gitRepoBranch, projectName) {
   return new Promise((resolve, reject) => {
     // Assumption: Any source repos will have an ezbake branch that we can use
     ui.log.write(`. Cloning ${url}#${gitRepoBranch} to ./${projectName}\n`);
-    const clone = spawn('git', [`clone`, `-b`, `${gitRepoBranch}`, url, projectName]);
+    const clone = spawn('git', [
+      `clone`,
+      `-b`,
+      `${gitRepoBranch}`,
+      url,
+      projectName
+    ]);
     clone.on('data', data => {
       ui.updateBottomBar(data);
     });

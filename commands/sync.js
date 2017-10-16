@@ -1,29 +1,28 @@
 const yargs = require('yargs');
 const { sanitizeArgs, ui, handle } = require('../common');
 
-const {  
-  sync
-} = require('../tasks/project');
+const { sync } = require('../tasks/project');
 
 module.exports = {
   command: 'sync',
   desc: 'synchronizes the .ezbake folder from the source project',
-  builder: (yargs) => {
+  builder: yargs => {
     return yargs
       .option('r', {
         alias: 'gitRepoURL',
-        describe: '(Optional) The URL of the source ezbake project Git repo. Defaults to reading from .ezbake/.gitsource, which was established after ezbake prepare'
+        describe:
+          '(Optional) The URL of the source ezbake project Git repo. Defaults to reading from .ezbake/.gitsource, which was established after ezbake prepare'
       })
       .option('b', {
         alias: 'gitRepoBranch',
-        describe: '(Optional) The branch on the source repo which contains the .ezbake folder. Defaults to ezbake if not specified'
+        describe:
+          '(Optional) The branch on the source repo which contains the .ezbake folder. Defaults to ezbake if not specified'
       });
   },
-  handler: async (argv) => {
+  handler: async argv => {
     let args = sanitizeArgs(argv);
-    await sync(ui, args)
-      .catch(handle);
+    await sync(ui, args).catch(handle);
     ui.log.write(`. Project successfully synced.`);
     process.exit(0);
   }
-}
+};

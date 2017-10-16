@@ -4,7 +4,7 @@ module.exports = [
     name: 'projectName',
     message: `Please enter the name for this project`,
     default: 'ezbake-sample',
-    filter: (val) => {
+    filter: val => {
       return val
         .replace(/\W+/g, ' ') // alphanumerics only
         .trimRight()
@@ -39,7 +39,8 @@ module.exports = [
   {
     type: 'input',
     name: 'gitOriginURL',
-    message: '(Optional) Please copy/paste the URL of the remote repo this template will be pushed to',
+    message:
+      '(Optional) Please copy/paste the URL of the remote repo this template will be pushed to',
     default: null
   }
 ];

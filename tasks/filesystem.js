@@ -13,7 +13,7 @@ module.exports = {
 };
 
 function executeCommand(cmd) {
-  return execSync(shellescape(cmd), { timeout: 60000});
+  return execSync(shellescape(cmd), { timeout: 60000 });
 }
 
 function createEnvFile(ui, projectName, answers) {

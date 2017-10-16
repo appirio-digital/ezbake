@@ -26,5 +26,8 @@
     "debug:unplug": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js unplug",
     "debug:cook": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js cook -r Query",
     "debug:menu": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js menu"
+  },
+  "devDependencies": {
+    "prettier": "^1.7.4"
   }
 }

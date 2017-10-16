@@ -14,21 +14,22 @@ module.exports = {
 };
 
 function menu(ui) {
-  const recipes = fs.readdirSync(recipeDir)
-    .map(fileOrDirName => {
-      let stats = fs.lstatSync(path.join(recipeDir, fileOrDirName));
-      if (stats.isFile()) {
-        return fileOrDirName.replace(/\.[^/.]+$/, "");
-      }
-      return fileOrDirName;
-    });
+  const recipes = fs.readdirSync(recipeDir).map(fileOrDirName => {
+    let stats = fs.lstatSync(path.join(recipeDir, fileOrDirName));
+    if (stats.isFile()) {
+      return fileOrDirName.replace(/\.[^/.]+$/, '');
+    }
+    return fileOrDirName;
+  });
 
-  let output = recipes
-    .forEach(recipe => {
-      let recipeDefinition = require(path.join(recipeDir, recipe));
-      ui.log.write(`> ${recipe}: ${recipeDefinition.description || 'Recipe definition for ' + recipe}`);
-      ui.log.write(`  > Example: ezbake cook -r ${recipe}`);
-    });
+  let output = recipes.forEach(recipe => {
+    let recipeDefinition = require(path.join(recipeDir, recipe));
+    ui.log.write(
+      `> ${recipe}: ${recipeDefinition.description ||
+        'Recipe definition for ' + recipe}`
+    );
+    ui.log.write(`  > Example: ezbake cook -r ${recipe}`);
+  });
 
   return;
 }
@@ -36,19 +37,20 @@ function menu(ui) {
 async function bakeRecipe(ui, name) {
   try {
     if (!fs.existsSync(ezbakeDir)) {
-      throw new Error(`! Could not find .ezbake folder. Please ensure your current working directory is at the root of your .ezbake scaffold`);
+      throw new Error(
+        `! Could not find .ezbake folder. Please ensure your current working directory is at the root of your .ezbake scaffold`
+      );
     }
     let recipeDirContents = fs.readdirSync(recipeDir);
     console.log(recipeDir);
-    let matchingRecipe = recipeDirContents
-      .find(fileOrDirName => {
-        let stats = fs.lstatSync(path.join(recipeDir, fileOrDirName));
-        if (stats.isFile()) {
-          return fileOrDirName.replace(/\.[^/.]+$/, "") === name;
-        }
-        return fileOrDirName === name;
-      });
-    
+    let matchingRecipe = recipeDirContents.find(fileOrDirName => {
+      let stats = fs.lstatSync(path.join(recipeDir, fileOrDirName));
+      if (stats.isFile()) {
+        return fileOrDirName.replace(/\.[^/.]+$/, '') === name;
+      }
+      return fileOrDirName === name;
+    });
+
     ui.log.write(`. Finding recipe for ${name} in ${recipeDir}...`);
     if (matchingRecipe) {
       ui.log.write(`. Cooking ${name}...`);
@@ -60,13 +62,13 @@ async function bakeRecipe(ui, name) {
           ingredients = await inquirer.prompt(recipe.ingredients);
         }
       }
-  
+
       let fileName = path.join(destination, `/${ingredients.fileName || name}`);
       let bake = _.template(recipe.source);
       if (!fs.existsSync(destination)) {
         fs.mkdirSync(destination);
       }
-      
+
       let answers = {
         overwriteExistingFile: true
       };
@@ -78,25 +80,23 @@ async function bakeRecipe(ui, name) {
             message: `${fileName} exists. Would you like to continue and overwrite this file`,
             default: true
           }
-        ])
+        ]);
       }
 
       if (answers.overwriteExistingFile) {
-        fs.writeFileSync(fileName, bake(ingredients), { encoding: 'utf-8'});
+        fs.writeFileSync(fileName, bake(ingredients), { encoding: 'utf-8' });
         ui.log.write(`. Successfully cooked ${name}!`);
-        await stageChanges(ui, `[ezbake] - baked ${fileName}`)
-          .catch(error => {
-            ui.log.write(`! ${error.message}`);
-          });
+        await stageChanges(ui, `[ezbake] - baked ${fileName}`).catch(error => {
+          ui.log.write(`! ${error.message}`);
+        });
         if (recipe.icing) {
           ui.log.write(`. Applying icing...`);
-          recipe.icing
-            .forEach(icing => {
-              ui.log.write(`  . ${icing.description}`);
-              let output = executeCommand(icing.cmd);
-              if (output.toString()) {
-                ui.log.write(`    . ${output.toString()}`);
-              }
+          recipe.icing.forEach(icing => {
+            ui.log.write(`  . ${icing.description}`);
+            let output = executeCommand(icing.cmd);
+            if (output.toString()) {
+              ui.log.write(`    . ${output.toString()}`);
+            }
           });
           ui.log.write(`. Icing applied!`);
         }
@@ -105,11 +105,10 @@ async function bakeRecipe(ui, name) {
 
       process.exit(0);
     }
-  
+
     throw new Error(`! Could not find recipe for ${name}. Please try again.`);
   } catch (error) {
     ui.log.write(error.message);
     process.exit(1);
   }
-  
 }
