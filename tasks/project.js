@@ -54,8 +54,8 @@ function sync(ui, args = {}) {
     const uuidv1 = require('uuid/v1');
     let tempFolderName = uuidv1();
     if (!args.gitRepoURL && !fs.existsSync(pathToGitSource)) {
-      throw new Error(
-        `! No Git URL specified and ${pathToGitSource} not found.`
+      return reject(
+        new Error(`! No Git URL specified and ${pathToGitSource} not found.`)
       );
     }
 
@@ -77,8 +77,10 @@ function sync(ui, args = {}) {
       `ezbake`,
       tempFolderName
     ).catch(error => {
-      throw new Error(
-        `! Could not clone source repo. Please try again. ${error.message}`
+      return reject(
+        new Error(
+          `! Could not clone source repo. Please try again. ${error.message}`
+        )
       );
     });
 

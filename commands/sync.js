@@ -20,9 +20,17 @@ module.exports = {
       });
   },
   handler: async argv => {
-    let args = sanitizeArgs(argv);
-    await sync(ui, args).catch(handle);
-    ui.log.write(`. Project successfully synced.`);
-    process.exit(0);
+    try {
+      let args = sanitizeArgs(argv);
+      await sync(ui, args).catch(handle);
+      ui.log.write(`. Project successfully synced.`);
+      process.exit(0);
+    } catch (error) {
+      ui.log.write(`! Could not sync`);
+      if (error.message) {
+        ui.log.write(`! ${error.message}`);
+      }
+      process.exit(-1);
+    }
   }
 };
