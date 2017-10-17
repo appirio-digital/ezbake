@@ -120,17 +120,15 @@ module.exports = {
           `./${projectIngredients.projectName}`
         );
         process.chdir(projectDir);
-        recipe.icing.forEach(async icing => {
+
+        for (let icing of recipe.icing) {
           ui.log.write(`  . ${icing.description}`);
           if (Array.isArray(icing.cmd)) {
-            let output = executeCommand(
+            await executeCommand(
               addIngredients(icing.cmd, consolatedIngredients)
             );
-            if (output.toString()) {
-              ui.log.write(`    . ${output.toString()}`);
-            }
           }
-        });
+        }
         ui.log.write(`. Icing applied!`);
       }
 

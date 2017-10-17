@@ -100,19 +100,15 @@ async function bakeRecipe(ui, name) {
         await stageChanges(ui, `[ezbake] - baked ${fileName}`).catch(error => {
           ui.log.write(`! ${error.message}`);
         });
+
         if (recipe.icing && Array.isArray(recipe.icing)) {
           ui.log.write(`. Applying icing...`);
-          recipe.icing.forEach(icing => {
+          for (let icing of recipe.icing) {
             if (Array.isArray(icing.cmd)) {
               ui.log.write(`  . ${icing.description}`);
-              let output = executeCommand(
-                addIngredients(icing.cmd, ingredients)
-              );
-              if (output.toString()) {
-                ui.log.write(`    . ${output.toString()}`);
-              }
+              await executeCommand(addIngredients(icing.cmd, ingredients));
             }
-          });
+          }
           ui.log.write(`. Icing applied!`);
         }
         process.exit(0);

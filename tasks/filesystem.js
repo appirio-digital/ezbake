@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs-extra');
 const path = require('path');
-const { spawn, execSync } = require('child_process');
+const { spawn, exec } = require('child_process');
 const cwd = path.resolve(process.cwd());
 const shellescape = require('shell-escape');
 
@@ -12,8 +12,26 @@ module.exports = {
   executeCommand
 };
 
-function executeCommand(cmd) {
-  return execSync(shellescape(cmd), { timeout: 60000 });
+function executeCommand(command) {
+  return new Promise((resolve, reject) => {
+    let cmd = command[0];
+    let args = command.length > 1 ? command.slice(1) : [];
+    let execCmd = spawn(cmd, args);
+    execCmd.stdout.on('data', data => {
+      console.log(`  ${data}`);
+    });
+
+    execCmd.stderr.on('data', data => {
+      console.log(`  ! ${data}`);
+    });
+
+    execCmd.on('exit', code => {
+      if (code !== 0) {
+        return reject(new Error(`  ! Error in command execution.`));
+      }
+      return resolve();
+    });
+  });
 }
 
 function createEnvFile(ui, projectName, answers) {
