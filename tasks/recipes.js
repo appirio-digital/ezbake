@@ -6,6 +6,7 @@ const cwd = path.resolve(process.cwd());
 const ezbakeDir = path.join(cwd, './.ezbake');
 const recipeDir = path.join(ezbakeDir, './recipes');
 const { stageChanges } = require('./git');
+const { addIngredients } = require('../common');
 const { executeCommand } = require('./filesystem');
 
 module.exports = {
@@ -89,13 +90,17 @@ async function bakeRecipe(ui, name) {
         await stageChanges(ui, `[ezbake] - baked ${fileName}`).catch(error => {
           ui.log.write(`! ${error.message}`);
         });
-        if (recipe.icing) {
+        if (recipe.icing && Array.isArray(recipe.icing)) {
           ui.log.write(`. Applying icing...`);
           recipe.icing.forEach(icing => {
-            ui.log.write(`  . ${icing.description}`);
-            let output = executeCommand(icing.cmd);
-            if (output.toString()) {
-              ui.log.write(`    . ${output.toString()}`);
+            if (Array.isArray(icing.cmd)) {
+              ui.log.write(`  . ${icing.description}`);
+              let output = executeCommand(
+                addIngredients(icing.cmd, ingredients)
+              );
+              if (output.toString()) {
+                ui.log.write(`    . ${output.toString()}`);
+              }
             }
           });
           ui.log.write(`. Icing applied!`);

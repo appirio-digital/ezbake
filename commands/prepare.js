@@ -1,7 +1,13 @@
 const path = require('path');
 const inquirer = require('inquirer');
 const yargs = require('yargs');
-const { sanitizeArgs, ui, invalidGitRepo, ingredients } = require('../common');
+const {
+  sanitizeArgs,
+  ui,
+  invalidGitRepo,
+  ingredients,
+  addIngredients
+} = require('../common');
 
 const {
   cloneRepo,
@@ -81,16 +87,14 @@ module.exports = {
 
       // Ask away!
       let ingredients = await inquirer.prompt(recipe.ingredients);
-      bakeProject(
-        ui,
-        Object.assign(
-          { ...projectIngredients, ...ingredients },
-          {
-            projectNameDocker: projectIngredients.projectName.replace(/-/g, '_')
-          }
-        ),
-        recipe
+      let consolatedIngredients = Object.assign(
+        { ...projectIngredients, ...ingredients },
+        {
+          projectNameDocker: projectIngredients.projectName.replace(/-/g, '_')
+        }
       );
+
+      bakeProject(ui, consolatedIngredients, recipe);
 
       // .env file setup
       if (recipe.env) {
@@ -109,7 +113,7 @@ module.exports = {
         );
       }
 
-      if (recipe.icing) {
+      if (recipe.icing && Array.isArray(recipe.icing)) {
         ui.log.write(`. Applying icing...`);
         let projectDir = path.join(
           process.cwd(),
@@ -118,9 +122,13 @@ module.exports = {
         process.chdir(projectDir);
         recipe.icing.forEach(async icing => {
           ui.log.write(`  . ${icing.description}`);
-          let output = executeCommand(icing.cmd);
-          if (output.toString()) {
-            ui.log.write(`    . ${output.toString()}`);
+          if (Array.isArray(icing.cmd)) {
+            let output = executeCommand(
+              addIngredients(icing.cmd, consolatedIngredients)
+            );
+            if (output.toString()) {
+              ui.log.write(`    . ${output.toString()}`);
+            }
           }
         });
         ui.log.write(`. Icing applied!`);
