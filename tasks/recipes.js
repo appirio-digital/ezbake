@@ -8,6 +8,7 @@ const recipeDir = path.join(ezbakeDir, './recipes');
 const { stageChanges } = require('./git');
 const { addIngredients } = require('../common');
 const { executeCommand } = require('./filesystem');
+const { baseIngredients } = require('../common/recipes');
 
 module.exports = {
   menu,
@@ -15,24 +16,29 @@ module.exports = {
 };
 
 function menu(ui) {
-  const recipes = fs.readdirSync(recipeDir).map(fileOrDirName => {
-    let stats = fs.lstatSync(path.join(recipeDir, fileOrDirName));
-    if (stats.isFile()) {
-      return fileOrDirName.replace(/\.[^/.]+$/, '');
-    }
-    return fileOrDirName;
-  });
+  try {
+    const recipes = fs.readdirSync(recipeDir).map(fileOrDirName => {
+      let stats = fs.lstatSync(path.join(recipeDir, fileOrDirName));
+      if (stats.isFile()) {
+        return fileOrDirName.replace(/\.[^/.]+$/, '');
+      }
+      return fileOrDirName;
+    });
 
-  let output = recipes.forEach(recipe => {
-    let recipeDefinition = require(path.join(recipeDir, recipe));
-    ui.log.write(
-      `> ${recipe}: ${recipeDefinition.description ||
-        'Recipe definition for ' + recipe}`
-    );
-    ui.log.write(`  > Example: ezbake cook -r ${recipe}`);
-  });
+    let output = recipes.forEach(recipe => {
+      let recipeDefinition = require(path.join(recipeDir, recipe));
+      ui.log.write(
+        `> ${recipe}: ${recipeDefinition.description ||
+          'Recipe definition for ' + recipe}`
+      );
+      ui.log.write(`  > Example: ezbake cook -r ${recipe}`);
+    });
 
-  return;
+    return;
+  } catch (error) {
+    ui.log.write(`! ${error.message}`);
+    process.exit(-1);
+  }
 }
 
 async function bakeRecipe(ui, name) {
@@ -60,7 +66,11 @@ async function bakeRecipe(ui, name) {
       let ingredients = {};
       if (Array.isArray(recipe.ingredients)) {
         if (recipe.ingredients.length > 0) {
-          ingredients = await inquirer.prompt(recipe.ingredients);
+          let recipesBase = baseIngredients(name, recipe.defaultFileName);
+          ingredients = await inquirer.prompt([
+            ...recipesBase,
+            ...recipe.ingredients
+          ]);
         }
       }
 
