@@ -28,6 +28,14 @@
     "debug:menu": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js menu"
   },
   "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^4.2.3",
     "prettier": "^1.7.4"
+  },
+  "lint-staged": {
+    "*.js": [
+      "./node_modules/.bin/prettier --single-quote --write",
+      "git add"
+    ]
   }
 }
