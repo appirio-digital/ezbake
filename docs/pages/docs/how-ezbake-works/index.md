@@ -80,12 +80,22 @@ module.exports = {
       name: "objectName",
       message: "What object are you querying from the database?",
       default: "some_table"
+    },
+    {
+      type: "input",
+      name: "messageToUser",
+      message: "Say something to the user: ",
+      default: "You have just created my recipe. May the odds be ever in your favor."
     }
   ],
   icing: [
     {
       description: `Says job's done`,
       cmd: ['echo', `"job's done"`]
+    },
+    {
+      description: `Says something to the user`,
+      cmd: ['echo', `"<%= messageToUser %>"`]
     }
   ]
 }
@@ -95,6 +105,7 @@ At the root of a project, your developer can simply execute `ezbake cook -r ORM`
 
 1. What is the file name for this ORM model? `user.js`
 1. What object are you querying from the database? `user`
+1. Say something to the user: `Hello, world`
 
 The result is a file called `user.js` dropped in the `/models` directory of the project that looks like the following:
 
@@ -104,6 +115,8 @@ module.exports = {
   query: `SELECT * FROM user`
 }
 ```
+
+Furthermore, when the file is created, you should see the two `echo` commands on the console. You can link `ingredients` to `icing` in the same fashion you templatize your project.
 
 # ezbake sync: An Example
 
