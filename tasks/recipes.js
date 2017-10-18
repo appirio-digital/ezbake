@@ -8,12 +8,48 @@ const recipeDir = path.join(ezbakeDir, './recipes');
 const { stageChanges } = require('./git');
 const { addIngredients } = require('../common');
 const { executeCommand } = require('./filesystem');
-const { baseIngredients } = require('../common/recipes');
+const {
+  baseIngredients,
+  newRecipeIngredients,
+  recipeTemplate
+} = require('../common/recipes');
 
 module.exports = {
   menu,
-  bakeRecipe
+  bakeRecipe,
+  newRecipe
 };
+
+async function newRecipe(ui) {
+  try {
+    let ingredients = await inquirer.prompt(newRecipeIngredients);
+    let newRecipePath = path.join(recipeDir, `./${ingredients.recipeName}.js`);
+    let answers = {
+      overwriteExistingFile: true
+    };
+    if (fs.existsSync(newRecipePath)) {
+      answers = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'overwriteExistingFile',
+          message: `${newRecipePath} exists. Would you like to continue and overwrite this file?`,
+          default: true
+        }
+      ]);
+    }
+
+    if (answers.overwriteExistingFile) {
+      ui.log.write(`. Writing new recipe ${newRecipePath}...`);
+      fs.writeFileSync(newRecipePath, recipeTemplate, { encoding: 'utf-8' });
+      ui.log.write(`. Successfully wrote ${newRecipePath}!`);
+      process.exit(0);
+    }
+    process.exit(0);
+  } catch (error) {
+    ui.log.write(`! ${error.message}`);
+    process.exit(-1);
+  }
+}
 
 function menu(ui) {
   try {
