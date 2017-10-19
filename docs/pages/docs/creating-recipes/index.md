@@ -24,6 +24,8 @@ The description to be listed when a user executes `ezbake menu`.
 
 The destination directory on which the created file will live. This is in relation to the root of a project that was scaffolded by `.ezbake`
 
+Note that this can be dynamically set using ingredients.  For example, specifying `destination: '<%= destination %>'` will correspond to an ingredient named `destination` for which you can prompt a user.  It will always be in relation to the root of a project.
+
 ## source
 
 A [JavaScript template literal string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) of the file's contents, with template strings to swap out.
@@ -116,4 +118,5 @@ The above recipe creates a React Component for a user by doing the following:
 1. It swaps in the template values from `ingredients` to the `source`
 1. It will write the resulting file to the `/components` folder relative to the project root
 1. It will execute `node web_api_icing.js` on the root of the project
+1. If a git binding is detected, a user will be prompted to stage the changes as a new commit to git
 1. It will execute the `say` command with the value provided for the `messageToUser` ingredient
