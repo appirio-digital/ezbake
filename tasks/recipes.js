@@ -84,6 +84,11 @@ async function bakeRecipe(ui, name) {
         `! Could not find .ezbake folder. Please ensure your current working directory is at the root of your .ezbake scaffold`
       );
     }
+
+    // Legacy support
+    if (!fs.existsSync(recipeDir)) {
+      fs.mkdirSync(recipeDir);
+    }
     let recipeDirContents = fs.readdirSync(recipeDir);
     console.log(recipeDir);
     let matchingRecipe = recipeDirContents.find(fileOrDirName => {
@@ -98,7 +103,6 @@ async function bakeRecipe(ui, name) {
     if (matchingRecipe) {
       ui.log.write(`. Cooking ${name}...`);
       let recipe = require(path.join(recipeDir, `/${matchingRecipe}`));
-      let destination = path.join(cwd, recipe.destination);
       let ingredients = {};
       if (Array.isArray(recipe.ingredients)) {
         if (recipe.ingredients.length > 0) {
@@ -109,6 +113,9 @@ async function bakeRecipe(ui, name) {
           ]);
         }
       }
+
+      let enhanceDestination = _.template(recipe.destination);
+      let destination = path.join(cwd, enhanceDestination(ingredients));
 
       let fileName = path.join(destination, `/${ingredients.fileName || name}`);
       let bake = _.template(recipe.source);
@@ -133,9 +140,28 @@ async function bakeRecipe(ui, name) {
       if (answers.overwriteExistingFile) {
         fs.writeFileSync(fileName, bake(ingredients), { encoding: 'utf-8' });
         ui.log.write(`. Successfully cooked ${name}!`);
-        await stageChanges(ui, `[ezbake] - baked ${fileName}`).catch(error => {
-          ui.log.write(`! ${error.message}`);
-        });
+        let gitAnswers = {
+          stageChanges: false
+        };
+        if (fs.existsSync(path.join(cwd, './.git'))) {
+          gitAnswers = await inquirer.prompt([
+            {
+              type: 'confirm',
+              name: 'stageChanges',
+              message: `Would you like to stage this new file as a new commit to git?`,
+              default: true
+            }
+          ]);
+        }
+
+        if (gitAnswers.stageChanges) {
+          await stageChanges(
+            ui,
+            `[ezbake] - cooked new Recipe - ${fileName}`
+          ).catch(error => {
+            ui.log.write(`! ${error.message}`);
+          });
+        }
 
         if (recipe.icing && Array.isArray(recipe.icing)) {
           ui.log.write(`. Applying icing...`);
