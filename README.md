@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/appirio-digital/ezbake.svg?branch=master)](https://travis-ci.org/appirio-digital/ezbake)
+[![Build Status](https://travis-ci.org/appirio-digital/ezbake.svg?branch=master)](https://travis-ci.org/appirio-digital/ezbake) [![npm (scoped)](https://img.shields.io/npm/v/@appirio/ezbake.svg?style=flat)]()
 
 ![logo](https://image.ibb.co/cVsukm/ezbake_logo.png)
 
