@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/appirio-digital/ezbake.svg?branch=master)](https://travis-ci.org/appirio-digital/ezbake)
+
 ![logo](https://image.ibb.co/cVsukm/ezbake_logo.png)
 
 # The Problem
