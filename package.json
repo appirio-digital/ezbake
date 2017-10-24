@@ -26,10 +26,12 @@
     "debug:plug": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js plug",
     "debug:unplug": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js unplug",
     "debug:cook": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js cook -r Query",
-    "debug:menu": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js menu"
+    "debug:menu": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js menu",
+    "test": "echo \"TODO: Run integration for entire app and assert filesystem\""
   },
   "devDependencies": {
     "husky": "^0.14.3",
+    "jest": "^21.2.1",
     "lint-staged": "^4.2.3",
     "prettier": "^1.7.4"
   },
@@ -38,5 +40,8 @@
       "./node_modules/.bin/prettier --single-quote --write",
       "git add"
     ]
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
