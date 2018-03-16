@@ -43,11 +43,13 @@ You may also execute local commands relative to the root of the project being cl
 
 Also, icing commands can be enhanced with `ingredients`. Simply reference the `ingredient.name` using the same template syntax you used for scaffolding your project. (e.g. `<%= someIngredientName >`)
 
-## Example 
+Every icing command is executed in a child process. If you need to do something fancy like changing to a different directory before executing that command, you can pass in a `cmdOptions: {...}` parameter with your icing. The options accepted are the options from the [Node spawn command](https://nodejs.org/api/child_process.html#child_process_child_process_spawn_command_args_options).
+
+## Example
 
 ```js
 module.exports = {
-  source: { 
+  source: {
     "**/*.txt": true,
     "**/*.sql": true,
     "**/*.yml": true,
@@ -81,6 +83,11 @@ module.exports = {
     {
       description: 'Says something on Mac',
       cmd: ['./icing.sh']
+    },
+    {
+      description: 'Change to a subdirectory and execute an npm install',
+      cmd: ['npm', 'install'],
+      cmdOptions: {cwd: '../scripts'}
     },
     {
       description: 'Tells me the job is done',
