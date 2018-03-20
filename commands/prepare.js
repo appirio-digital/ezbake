@@ -88,7 +88,10 @@ module.exports = {
       // Ask away!
       let ingredients = await inquirer.prompt(recipe.ingredients);
       let consolatedIngredients = Object.assign(
-        { ...projectIngredients, ...ingredients },
+        {
+          ...projectIngredients,
+          ...ingredients
+        },
         {
         projectNameDocker: projectIngredients.projectName.replace(/-/g, '_'),
         projectAuthor: projectIngredients.authorName + " <" + projectIngredients.authorEmail + ">"
@@ -125,7 +128,8 @@ module.exports = {
           ui.log.write(`  . ${icing.description}`);
           if (Array.isArray(icing.cmd)) {
             await executeCommand(
-              addIngredients(icing.cmd, consolatedIngredients)
+              addIngredients(icing.cmd, consolatedIngredients),
+              icing.cmdOptions
             );
           }
         }

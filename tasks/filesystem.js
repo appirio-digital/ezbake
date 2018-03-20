@@ -12,11 +12,11 @@ module.exports = {
   executeCommand
 };
 
-function executeCommand(command) {
+function executeCommand(command, cmdOptions) {
   return new Promise((resolve, reject) => {
     let cmd = command[0];
     let args = command.length > 1 ? command.slice(1) : [];
-    let execCmd = spawn(cmd, args);
+    let execCmd = spawn(cmd, args, cmdOptions);
     execCmd.stdout.on('data', data => {
       console.log(`  ${data}`);
     });
@@ -44,7 +44,9 @@ function createEnvFile(ui, projectName, answers) {
       return previous.concat(current);
     }, '');
 
-  fs.writeFileSync(pathToEnvFile, contents, { encoding: 'utf8' });
+  fs.writeFileSync(pathToEnvFile, contents, {
+    encoding: 'utf8'
+  });
   ui.log.write(`. Wrote ${pathToEnvFile} successfully`);
 }
 
@@ -55,7 +57,10 @@ function walkSync(dir, filelist) {
     if (fs.statSync(path.join(dir, file)).isDirectory()) {
       filelist = walkSync(path.join(dir, file), filelist);
     } else {
-      filelist.push({ path: path.join(dir, file), name: file });
+      filelist.push({
+        path: path.join(dir, file),
+        name: file
+      });
     }
   });
   return filelist;
