@@ -90,9 +90,9 @@ module.exports = {
       let consolatedIngredients = Object.assign(
         { ...projectIngredients, ...ingredients },
         {
-          projectNameDocker: projectIngredients.projectName.replace(/-/g, '_')
-        }
-      );
+        projectNameDocker: projectIngredients.projectName.replace(/-/g, '_'),
+        projectAuthor: projectIngredients.authorName + " <" + projectIngredients.authorEmail + ">"
+      });
 
       bakeProject(ui, consolatedIngredients, recipe);
 

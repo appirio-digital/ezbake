@@ -14,9 +14,15 @@ module.exports = [
   },
   {
     type: 'input',
-    name: 'projectAuthor',
-    message: `Please enter an author for this project`,
-    default: `ezbake <ezbake@appirio.com>`
+    name: 'authorName',
+    message: `What's your name?`,
+    default: `ezbake`
+  },
+  {
+    type: 'input',
+    name: 'authorEmail',
+    message: `What's your email address?`,
+    default: `ezbake@appirio.com`
   },
   {
     type: 'input',
@@ -39,8 +45,7 @@ module.exports = [
   {
     type: 'input',
     name: 'gitOriginURL',
-    message:
-      '(Optional) Please copy/paste the URL of the remote repo this template will be pushed to',
+    message: `(Optional) Want to push this to a new, EMPTY repo? If so, give us a URL`,
     default: null
   }
 ];
