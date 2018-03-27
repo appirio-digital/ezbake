@@ -1,7 +1,10 @@
 const path = require('path');
 const cwd = path.resolve(process.cwd());
 const rimraf = require('rimraf');
-const { spawn, exec } = require('child_process');
+const {
+  spawn,
+  exec
+} = require('child_process');
 
 module.exports = {
   cloneRepo,
@@ -81,7 +84,7 @@ function establishLocalGitBindings(ui, projectName) {
     const pathToProject = path.join(cwd, `./${projectName}`);
     ui.log.write(`. Establishing new local .git bindings...\n`);
     exec(
-      `cd "${pathToProject}" && git init && git add . && git commit -m "[ezbake] - get it while it's hot!"`,
+      `cd "${pathToProject}" && git init && git add . && git commit -m "[ezbake] - initial commit"`,
       (err, stdout, stderr) => {
         if (err || stderr) {
           return reject(
@@ -105,7 +108,7 @@ function pushLocalGitToOrigin(ui, gitOriginURL, projectName) {
     const pathToProject = path.join(cwd, `./${projectName}`);
     ui.log.write(`. Pushing to ${gitOriginURL}\n`);
     exec(
-      `cd ${pathToProject} && git remote add origin ${gitOriginURL} && git push -u origin master`,
+      `cd "${pathToProject}" && git remote add origin ${gitOriginURL} && git push -u origin master`,
       (err, stdout, stderr) => {
         ui.log.write(`  . ${stdout}\n`);
         if (err) {
