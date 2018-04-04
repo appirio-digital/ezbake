@@ -13,7 +13,9 @@ const {
   cloneRepo,
   deleteGitFolder,
   establishLocalGitBindings,
-  pushLocalGitToOrigin
+  addGitRemote,
+  pushLocalGitToOrigin,
+  stageChanges
 } = require('../tasks/git');
 
 const {
@@ -93,9 +95,14 @@ module.exports = {
           ...ingredients
         },
         {
-        projectNameDocker: projectIngredients.projectName.replace(/-/g, '_'),
-        projectAuthor: projectIngredients.authorName + " <" + projectIngredients.authorEmail + ">"
-      });
+          projectNameDocker: projectIngredients.projectName.replace(/-/g, '_'),
+          projectAuthor:
+            projectIngredients.authorName +
+            ' <' +
+            projectIngredients.authorEmail +
+            '>'
+        }
+      );
 
       bakeProject(ui, consolatedIngredients, recipe);
 
@@ -106,10 +113,10 @@ module.exports = {
       }
 
       // Finally, establish a local .git binding
-      // And optionally push to a specified remote repo
+      // And optionally add the specified remote
       await establishLocalGitBindings(ui, projectIngredients.projectName);
       if (projectIngredients.gitOriginURL) {
-        await pushLocalGitToOrigin(
+        await addGitRemote(
           ui,
           projectIngredients.gitOriginURL,
           projectIngredients.projectName
@@ -134,6 +141,21 @@ module.exports = {
           }
         }
         ui.log.write(`. Icing applied!`);
+      }
+
+      // Finally, stage and commit the changes.
+      // And optionally push to a remote repo
+      await stageChanges(
+        ui,
+        '[ezbake] - initial commit',
+        projectIngredients.projectName
+      );
+      if (projectIngredients.gitOriginURL) {
+        await pushLocalGitToOrigin(
+          ui,
+          projectIngredients.gitOriginURL,
+          projectIngredients.projectName
+        );
       }
 
       ui.log.write(`. Your project is ready!`);

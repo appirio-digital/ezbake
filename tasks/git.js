@@ -7,17 +7,20 @@ module.exports = {
   cloneRepo,
   deleteGitFolder,
   establishLocalGitBindings,
+  addGitRemote,
   pushLocalGitToOrigin,
   stageChanges
 };
 
-function stageChanges(ui, commitMessage) {
+function stageChanges(ui, commitMessage, projectName = '.') {
   return new Promise((resolve, reject) => {
+    pathToProject =
+      projectName === '.' ? cwd : path.join(cwd, `./${projectName}`);
     ui.log.write(
       `. Staging git changes with commit message "${commitMessage}". \n`
     );
     exec(
-      `git add . && git commit -m "${commitMessage}"`,
+      `cd "${pathToProject}" && git add . && git commit -m "${commitMessage}"`,
       (err, stdout, stderr) => {
         if (err || stderr) {
           return reject(
@@ -80,19 +83,39 @@ function establishLocalGitBindings(ui, projectName) {
   return new Promise((resolve, reject) => {
     const pathToProject = path.join(cwd, `./${projectName}`);
     ui.log.write(`. Establishing new local .git bindings...\n`);
+    exec(`cd "${pathToProject}" && git init`, (err, stdout, stderr) => {
+      if (err || stderr) {
+        return reject(
+          new Error(
+            `! Could not establish a local git binding in ${pathToProject}. Please check your permissions or if git exists on your PATH.`
+          )
+        );
+      }
+      ui.log.write(
+        `. Finished establishing new local .git binding in ${pathToProject}.\n`
+      );
+      return resolve();
+    });
+  });
+}
+
+function addGitRemote(ui, gitOriginURL, projectName) {
+  // Assumption: process is already changed to the project directory
+  return new Promise((resolve, reject) => {
+    const pathToProject = path.join(cwd, `./${projectName}`);
+    ui.log.write(`. Adding a git remote ${gitOriginURL}\n`);
     exec(
-      `cd ${pathToProject} && git init && git add . && git commit -m "[ezbake] - get it while it's hot!"`,
+      `cd "${pathToProject}" && git remote add origin ${gitOriginURL}`,
       (err, stdout, stderr) => {
-        if (err || stderr) {
+        ui.log.write(`  . ${stdout}\n`);
+        if (err) {
           return reject(
             new Error(
-              `! Could not establish a local git binding in ${pathToProject}. Please check your permissions or if git exists on your PATH.`
+              `! Could not add the remote ${gitOriginURL} to ${pathToProject}. Please check the URL.`
             )
           );
         }
-        ui.log.write(
-          `. Finished establishing new local .git binding in ${pathToProject}.\n`
-        );
+        ui.log.write(`. Succesfully added git remote: ${gitOriginURL}.\n`);
         return resolve();
       }
     );
@@ -105,7 +128,7 @@ function pushLocalGitToOrigin(ui, gitOriginURL, projectName) {
     const pathToProject = path.join(cwd, `./${projectName}`);
     ui.log.write(`. Pushing to ${gitOriginURL}\n`);
     exec(
-      `cd ${pathToProject} && git remote add origin ${gitOriginURL} && git push -u origin master`,
+      `cd "${pathToProject}" && git push -u origin master`,
       (err, stdout, stderr) => {
         ui.log.write(`  . ${stdout}\n`);
         if (err) {
