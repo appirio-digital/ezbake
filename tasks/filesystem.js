@@ -89,16 +89,19 @@ async function checkForExistingFolder(ui, projectName) {
         ])
         .then(directoryAnswers => {
           if (directoryAnswers.projectName === projectName) {
-            const rm = spawn('rm', [`-rf`, directory]);
-            rm.on('close', code => {
-              if (code !== 0) {
+            fs
+              .remove(directory)
+              .then(() => {
+                ui.log.write(`! Deleted ${directory}`);
+                return resolve(projectName);
+              })
+              .catch(err => {
                 return reject(
-                  `We've had problems removing the ${directory}. Do you have enough permissions to delete it?`
+                  new Error(
+                    `We've had problems removing the ${directory}. Do you have enough permissions to delete it? Make sure that the directory isn't open in any program/terminal.`
+                  )
                 );
-              }
-              ui.log.write(`! Deleted ${directory}`);
-              return resolve(projectName);
-            });
+              });
           } else {
             return resolve(directoryAnswers.projectName);
           }
