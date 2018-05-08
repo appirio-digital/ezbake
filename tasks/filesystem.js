@@ -1,10 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs-extra');
 const path = require('path');
-const {
-  spawn,
-  exec
-} = require('child_process');
+const { spawn, exec } = require('child_process');
 const cwd = path.resolve(process.cwd());
 const shellescape = require('shell-escape');
 
@@ -75,19 +72,21 @@ async function checkForExistingFolder(ui, projectName) {
     let directoryExists = fs.existsSync(directory);
     if (directoryExists) {
       inquirer
-        .prompt([{
-          type: 'input',
-          name: 'projectName',
-          message: `${directory} already exists. Please specify a new name. If you keep the current name, it will be deleted.`,
-          default: `${projectName}`,
-          filter: val => {
-            return val
-              .replace(/\W+/g, ' ') // alphanumerics only
-              .trimRight()
-              .replace(/ /g, '-')
-              .toLowerCase();
+        .prompt([
+          {
+            type: 'input',
+            name: 'projectName',
+            message: `${directory} already exists. Please specify a new name. If you keep the current name, it will be deleted.`,
+            default: `${projectName}`,
+            filter: val => {
+              return val
+                .replace(/\W+/g, ' ') // alphanumerics only
+                .trimRight()
+                .replace(/ /g, '-')
+                .toLowerCase();
+            }
           }
-        }])
+        ])
         .then(directoryAnswers => {
           if (directoryAnswers.projectName === projectName) {
             fs
@@ -98,7 +97,9 @@ async function checkForExistingFolder(ui, projectName) {
               })
               .catch(err => {
                 return reject(
-                  `We've had problems removing the ${directory}. Do you have enough permissions to delete it?`
+                  new Error(
+                    `We've had problems removing the ${directory}. Do you have enough permissions to delete it?`
+                  )
                 );
               });
           } else {
