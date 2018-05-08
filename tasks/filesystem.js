@@ -98,7 +98,7 @@ async function checkForExistingFolder(ui, projectName) {
               .catch(err => {
                 return reject(
                   new Error(
-                    `We've had problems removing the ${directory}. Do you have enough permissions to delete it?`
+                    `We've had problems removing the ${directory}. Do you have enough permissions to delete it? Make sure that the directory isn't open in any program/terminal.`
                   )
                 );
               });
