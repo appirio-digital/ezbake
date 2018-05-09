@@ -128,7 +128,7 @@ function pushLocalGitToOrigin(ui, gitOriginURL, projectName) {
     const pathToProject = path.join(cwd, `./${projectName}`);
     ui.log.write(`. Pushing to ${gitOriginURL}\n`);
     exec(
-      `cd "${pathToProject}" && git push -u origin master`,
+      `cd "${pathToProject}" && git push -u origin master --follow-tags`,
       (err, stdout, stderr) => {
         ui.log.write(`  . ${stdout}\n`);
         if (err) {
