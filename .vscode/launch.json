@@ -7,6 +7,15 @@
     {
       "type": "node",
       "request": "attach",
+      "name": "Attach to Child Process",
+      "port": 5859,
+      "address": "127.0.0.1",
+      "localRoot": "${workspaceFolder}/ezbake-sample",
+      "protocol": "legacy"
+    },
+    {
+      "type": "node",
+      "request": "attach",
       "name": "Attach to Debugger",
       "address": "127.0.0.1",
       "port": 5858,

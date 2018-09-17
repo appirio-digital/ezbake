@@ -11,12 +11,14 @@ module.exports = {
   invalidGitRepo,
   ingredients,
   addIngredients,
-  logo
+  logo,
+  promiseTimeout
 };
 
 function sanitizeArgs(argv) {
   // Remove any yargs-specific keys to avoid false positives
-  let args = { ...argv };
+  let args = { ...argv
+  };
   delete args._;
   delete args.help;
   delete args.version;
@@ -31,13 +33,13 @@ function handle(error) {
 
 function invalidGitRepo(error) {
   throw new Error(
-    `! This is not a valid ezbake project. Please see the conventions here: https://appirio-digital.github.io/ezbake/docs/\n  ! ${error.message}`
+    `! Could not clone repo or is not a valid ezbake project. Please see the conventions here: https://appirio-digital.github.io/ezbake/docs/\n  ! ${error.message}`
   );
 }
 
 /**
  * Adds ingredients (e.g. template values) to an array of cmd's
- * @param {Array} cmd - A string array of commands to execute as icing 
+ * @param {Array} cmd - A string array of commands to execute as icing
  * @param {Object} ingredients - An object of all ingredients collected
  */
 function addIngredients(cmd, ingredients) {
@@ -45,4 +47,26 @@ function addIngredients(cmd, ingredients) {
     let icingTemplate = _.template(cmdItem);
     return icingTemplate(ingredients);
   });
+}
+
+/**
+ * Add a timeout to any promise to ensure it doesn't run forever
+ * @param {integer} ms - milliseconds to wait
+ * @param {Promise} pendingPromise - the promise to timeout
+ */
+function promiseTimeout(ms, pendingPromise) {
+  // Create a promise that rejects in <ms> milliseconds
+  const timeout = new Promise((resolve, reject) => {
+    const id = setTimeout(() => {
+      clearTimeout(id);
+      const e = 'TIMEDOUT';
+      reject(e);
+    }, ms);
+  });
+
+  // Returns a race between our timeout and the passed in promise
+  return Promise.race([
+    pendingPromise,
+    timeout,
+  ]);
 }
