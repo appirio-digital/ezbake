@@ -32,7 +32,8 @@ const {
 
 module.exports = {
   command: 'prepare',
-  desc: 'creates a new scaffold from an ezbake project in a specified Git source',
+  desc:
+    'creates a new scaffold from an ezbake project in a specified Git source',
   builder: yargs => {
     return yargs
       .option('r', {
@@ -41,17 +42,19 @@ module.exports = {
       })
       .option('b', {
         alias: 'gitRepoBranch',
-        describe: 'The branch on the source repo which contains the .ezbake folder'
+        describe:
+          'The branch on the source repo which contains the .ezbake folder'
       })
       .option('o', {
         alias: 'gitOriginURL',
-        describe: 'The URL of the Git destination repo to push to as a remote origin'
+        describe:
+          'The URL of the Git destination repo to push to as a remote origin'
       });
   },
   handler: async argv => {
     let args = sanitizeArgs(argv);
     let baseIngredients = ingredients;
-    const TIMEOUT = 5000;
+    const TIMEOUT = 20000;
     try {
       // Mise en place
       baseIngredients = baseIngredients.filter(ingredient => {
@@ -70,12 +73,15 @@ module.exports = {
       );
 
       // Check if the repo is valid
-      await promiseTimeout(30000, cloneRepo(
-        ui,
-        projectIngredients.gitRepoURL,
-        projectIngredients.gitRepoBranch,
-        projectIngredients.projectName
-      )).catch(invalidGitRepo);
+      await promiseTimeout(
+        180000,
+        cloneRepo(
+          ui,
+          projectIngredients.gitRepoURL,
+          projectIngredients.gitRepoBranch,
+          projectIngredients.projectName
+        )
+      ).catch(invalidGitRepo);
       let recipe = readAndInitializeProjectRecipe(
         ui,
         projectIngredients.projectName,
@@ -84,23 +90,29 @@ module.exports = {
       );
 
       // Remove git bindings
-      await promiseTimeout(TIMEOUT, deleteGitFolder(ui, projectIngredients.projectName))
-        .catch(err => {
-          throw new Error(`Error: ${err} while deleting cloned Git folder.`);
-        });
+      await promiseTimeout(
+        TIMEOUT,
+        deleteGitFolder(ui, projectIngredients.projectName)
+      ).catch(err => {
+        throw new Error(`Error: ${err} while deleting cloned Git folder.`);
+      });
 
       // Ask away!
       let ingredients = await inquirer.prompt(recipe.ingredients);
-      let allIngredients = Object.assign({
-        ...projectIngredients,
-        ...ingredients
-      }, {
-        projectNameDocker: projectIngredients.projectName.replace(/-/g, '_'),
-        projectAuthor: projectIngredients.authorName +
-          ' <' +
-          projectIngredients.authorEmail +
-          '>'
-      });
+      let allIngredients = Object.assign(
+        {
+          ...projectIngredients,
+          ...ingredients
+        },
+        {
+          projectNameDocker: projectIngredients.projectName.replace(/-/g, '_'),
+          projectAuthor:
+            projectIngredients.authorName +
+            ' <' +
+            projectIngredients.authorEmail +
+            '>'
+        }
+      );
 
       bakeProject(ui, allIngredients, recipe);
 
@@ -113,10 +125,12 @@ module.exports = {
       // Finally, establish a local .git binding
       // And optionally add the specified remote
 
-      await promiseTimeout(TIMEOUT, establishLocalGitBindings(ui, projectIngredients.projectName))
-        .catch(err => {
-          throw new Error(`Error: ${err} while establishing Git bindings.`);
-        });
+      await promiseTimeout(
+        TIMEOUT,
+        establishLocalGitBindings(ui, projectIngredients.projectName)
+      ).catch(err => {
+        throw new Error(`Error: ${err} while establishing Git bindings.`);
+      });
       if (projectIngredients.gitOriginURL) {
         await addGitRemote(
           ui,

@@ -17,7 +17,8 @@ module.exports = {
 
 function sanitizeArgs(argv) {
   // Remove any yargs-specific keys to avoid false positives
-  let args = { ...argv
+  let args = {
+    ...argv
   };
   delete args._;
   delete args.help;
@@ -59,14 +60,11 @@ function promiseTimeout(ms, pendingPromise) {
   const timeout = new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       clearTimeout(id);
-      const e = 'TIMEDOUT';
+      const e = `TIMEDOUT: Command timed out after ${ms / 1000} seconds`;
       reject(e);
     }, ms);
   });
 
   // Returns a race between our timeout and the passed in promise
-  return Promise.race([
-    pendingPromise,
-    timeout,
-  ]);
+  return Promise.race([pendingPromise, timeout]);
 }
