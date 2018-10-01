@@ -1,6 +1,6 @@
 {
   "name": "@appirio/ezbake",
-  "version": "3.5.7",
+  "version": "3.5.8",
   "description": "The project scaffolder for everyone",
   "main": "index.js",
   "repository": "https://github.com/appirio-digital/ezbake.git",
