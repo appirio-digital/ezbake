@@ -30,12 +30,32 @@ const {
   bakeProject
 } = require('../tasks/project');
 
+const getDefaultProjectName = repoURL => {
+  let projectName = path.basename(repoURL).toLowerCase();
+  projectName = projectName.replace(/\.git$/, '');
+  projectName = projectName.replace(/\.+/g, '-');
+  projectName = projectName.replace(/-+/g, '-');
+  return projectName;
+};
+
+const getValidProjectName = name => {
+  return name
+    .replace(/\W+/g, ' ') // alphanumerics only
+    .trimRight()
+    .replace(/ /g, '-')
+    .toLowerCase();
+};
+
 module.exports = {
   command: 'prepare',
   desc:
     'creates a new scaffold from an ezbake project in a specified Git source',
   builder: yargs => {
     return yargs
+      .option('n', {
+        alias: 'projectName',
+        describe: 'Alphanumeric project name'
+      })
       .option('r', {
         alias: 'gitRepoURL',
         describe: 'The URL of the source Git repo to ezbake'
@@ -49,17 +69,45 @@ module.exports = {
         alias: 'gitOriginURL',
         describe:
           'The URL of the Git destination repo to push to as a remote origin'
+      })
+      .option('s', {
+        alias: 'simple',
+        describe:
+          'Flag to indicate Whether to ask for authorName, authorEmail and projectDescription',
+        type: 'boolean',
+        default: false
       });
   },
   handler: async argv => {
+    // console.log(argv);
     let args = sanitizeArgs(argv);
+    // Sanitize Project Name, if passed in as parameter
+    if (args['projectName']) {
+      args['projectName'] = getValidProjectName(args['projectName']);
+    }
     let baseIngredients = ingredients;
     const TIMEOUT = 20000;
     try {
       // Mise en place
       baseIngredients = baseIngredients.filter(ingredient => {
+        if (ingredient.name === 'projectName') {
+          // Override default project name
+          if (!args[ingredient.name] && args['gitOriginURL']) {
+            ingredient.default = getDefaultProjectName(args['gitOriginURL']);
+          }
+        }
+        // Exclude fields for which the values have already been provided with the command
         if (args[ingredient.name]) {
           console.log(`> ${ingredient.name}: ${args[ingredient.name]}`);
+          return false;
+        }
+        // Exclude some fields in case of simple setup
+        if (
+          args['simple'] &&
+          ['authorName', 'authorEmail', 'projectDescription'].includes(
+            ingredient.name
+          )
+        ) {
           return false;
         }
         return true;
@@ -73,15 +121,13 @@ module.exports = {
       );
 
       // Check if the repo is valid
-      await promiseTimeout(
-        180000,
-        cloneRepo(
-          ui,
-          projectIngredients.gitRepoURL,
-          projectIngredients.gitRepoBranch,
-          projectIngredients.projectName
-        )
+      await cloneRepo(
+        ui,
+        projectIngredients.gitRepoURL,
+        projectIngredients.gitRepoBranch,
+        projectIngredients.projectName
       ).catch(invalidGitRepo);
+
       let recipe = readAndInitializeProjectRecipe(
         ui,
         projectIngredients.projectName,

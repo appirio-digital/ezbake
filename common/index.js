@@ -12,7 +12,8 @@ module.exports = {
   ingredients,
   addIngredients,
   logo,
-  promiseTimeout
+  promiseTimeout,
+  debugLog
 };
 
 function sanitizeArgs(argv) {
@@ -34,7 +35,9 @@ function handle(error) {
 
 function invalidGitRepo(error) {
   throw new Error(
-    `! Could not clone repo or is not a valid ezbake project. Please see the conventions here: https://appirio-digital.github.io/ezbake/docs/\n  ! ${error.message}`
+    `! Could not clone repo or is not a valid ezbake project. Please see the conventions here: https://appirio-digital.github.io/ezbake/docs/\n  ! ${
+      error.message
+    }`
   );
 }
 
@@ -60,11 +63,18 @@ function promiseTimeout(ms, pendingPromise) {
   const timeout = new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       clearTimeout(id);
-      const e = `TIMEDOUT: Command timed out after ${ms / 1000} seconds`;
-      reject(e);
+      reject(
+        new Error(`TIMEDOUT: Command timed out after ${ms / 1000} seconds`)
+      );
     }, ms);
   });
 
   // Returns a race between our timeout and the passed in promise
   return Promise.race([pendingPromise, timeout]);
+}
+
+function debugLog(...messages) {
+  _.lowerCase(process.env.EZBAKE_DEBUG_ENABLE) == 'true'
+    ? console.log(...messages)
+    : '';
 }

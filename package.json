@@ -17,7 +17,7 @@
     "yargs": "^9.0.1"
   },
   "bin": {
-    "ezbake": "./index.js"
+    "ezbake": "./bin/ezbake.js"
   },
   "scripts": {
     "precommit": "lint-staged",
@@ -27,7 +27,8 @@
     "debug:unplug": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js unplug",
     "debug:cook": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js cook -r Query",
     "debug:menu": "node --inspect-brk=0.0.0.0:5858 --nolazy index.js menu",
-    "test": "echo \"TODO: Run integration for entire app and assert filesystem\""
+    "test": "echo \"TODO: Run integration for entire app and assert filesystem\"",
+    "postinstall": "node install/node 8.12.0"
   },
   "devDependencies": {
     "husky": "^0.14.3",
