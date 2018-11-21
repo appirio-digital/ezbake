@@ -1,0 +1,7 @@
+{
+  "name": "install-node",
+  "version": "1.0.0",
+  "description": "Local Node Installation",
+  "license": "MIT",
+  "dependencies": {}
+}
