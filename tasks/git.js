@@ -38,6 +38,32 @@ function stageChanges(ui, commitMessage, projectName = '.') {
 
 function cloneRepo(ui, url, gitRepoBranch, projectName) {
   return new Promise((resolve, reject) => {
+    const loader = ['/', '|', '\\', '-'];
+    let i = 4;
+    let timeout;
+    const msg =
+      ' Please wait while the repository is being cloned. It may take several minutes to complete, depending on your network speed...';
+    const toggleLoader = (action, firstPass) => {
+      clearTimeout(timeout);
+      if (firstPass) {
+        process.stdout.write('\n\n\n\n');
+        process.stdout.moveCursor(0, -4);
+      } else {
+        process.stdout.moveCursor(
+          0,
+          -(Math.ceil((3 + msg.length) / process.stdout.columns) + 2)
+        );
+      }
+      process.stdout.clearLine();
+      process.stdout.cursorTo(0);
+      if (action === 'show') {
+        process.stdout.write(
+          '\n  \x1b[33m' + loader[i++ % 4] + msg + '\n\n' + '\x1b[0m'
+        );
+        timeout = setTimeout(toggleLoader, 200, 'show');
+      }
+    };
+
     // Assumption: Any source repos will have an ezbake branch that we can use
     ui.log.write(`. Cloning ${url}#${gitRepoBranch} to ./${projectName}\n`);
     const clone = spawn('git', [
@@ -47,11 +73,11 @@ function cloneRepo(ui, url, gitRepoBranch, projectName) {
       url,
       projectName
     ]);
-    clone.on('data', data => {
-      ui.updateBottomBar(data);
-    });
+
+    toggleLoader('show', true);
 
     clone.on('close', code => {
+      toggleLoader('hide');
       if (code !== 0) {
         return reject(
           new Error(
