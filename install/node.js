@@ -1,4 +1,5 @@
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { spawn } = require('child_process');
 
@@ -18,6 +19,17 @@ const deleteFolderRecursive = p => {
   }
 };
 
+const createFolderRecursive = targetDir => {
+  targetDir.split(path.sep).reduce((parentDir, childDir) => {
+    let currentPath = parentDir;
+    currentPath += childDir + path.sep;
+    if (!fs.existsSync(currentPath)) {
+      fs.mkdirSync(currentPath);
+    }
+    return currentPath;
+  }, '');
+};
+
 const linkSync = (src, dest) => {
   try {
     fs.unlinkSync(dest);
@@ -26,7 +38,15 @@ const linkSync = (src, dest) => {
       throw e;
     }
   }
-  return fs.linkSync(src, dest);
+  // First try to create a link. If the opertaion fails, create a copy
+  try {
+    return fs.linkSync(src, dest);
+  } catch (e) {
+    if (e.code !== 'EXDEV') {
+      throw e;
+    }
+    return fs.copyFileSync(src, dest);
+  }
 };
 
 const installArchSpecificPackage = (version, require) => {
@@ -55,27 +75,29 @@ const installArchSpecificPackage = (version, require) => {
     const subpkg = JSON.parse(fs.readFileSync(pkgJson, 'utf8'));
     const executable = subpkg.bin.node;
     const bin = path.resolve(path.dirname(pkgJson), executable);
-    const parentDir = path.join(process.cwd(), '..');
-    const parentBinDir = path.join(parentDir, 'bin');
+    const targetParentDir = path.join(
+      os.homedir(),
+      '.appirio',
+      'modules',
+      'ezbake'
+    );
+    const targetDir = path.join(targetParentDir, 'bin');
 
     try {
-      if (!fs.existsSync(parentBinDir)) {
-        fs.mkdirSync(parentBinDir);
-      }
+      createFolderRecursive(targetDir);
     } catch (e) {
       throw e;
     }
 
-    linkSync(bin, path.resolve(parentDir, executable));
+    linkSync(bin, path.resolve(targetParentDir, executable));
     deleteFolderRecursive('./node_modules');
 
     if (platform === 'win') {
       fs.writeFileSync(
-        path.resolve(parentBinDir, 'node'),
+        path.resolve(targetDir, 'node'),
         'This file intentionally left blank'
       );
     }
-
     return process.exit(code);
   });
 };
